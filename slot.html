@@ -1,7 +1,316 @@
-PinoyJackpot/
-│
-├── index.html
-├── slot.html
-├── spin.mp3
-├── win.mp3
-└── slot-machine.jpg
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PinoyJackpot - Royal Slot</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #050505;
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+    radial-gradient(circle at 20% 20%, rgba(255,215,0,.15), transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(255,215,0,.12), transparent 35%),
+    linear-gradient(#050505, #101010);
+    z-index: -2;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    background: rgba(0,0,0,.8);
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 30px;
+    border-bottom: 2px solid gold;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 15px gold;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+    transition: .3s;
+}
+
+nav a:hover {
+    color: #ffd700;
+    text-shadow: 0 0 10px gold;
+}
+
+/* Slot Machine Container */
+.game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: #ffd700;
+    font-size: 48px;
+    text-shadow: 0 0 20px gold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.balance-display {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.balance-display span {
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+
+.slot-machine {
+    background: #111;
+    border: 4px solid gold;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(255,215,0,0.3);
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reels {
+    display: flex;
+    justify-content: space-between;
+    background: #000;
+    border: 2px solid #444;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.reel {
+    width: 90px;
+    height: 90px;
+    background: #181818;
+    border: 2px solid gold;
+    border-radius: 10px;
+    font-size: 50px;
+    line-height: 90px;
+    text-align: center;
+    user-select: none;
+    transition: transform 0.1s ease-in-out;
+}
+
+.btn {
+    display: inline-block;
+    padding: 18px 50px;
+    background: linear-gradient(90deg, #ffd700, #ffae00);
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: .3s;
+    box-shadow: 0 0 25px gold;
+    width: 100%;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px gold;
+}
+
+.btn:disabled {
+    background: #555;
+    color: #888;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.message {
+    margin-top: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    min-height: 30px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.win-message {
+    color: #00ff00;
+    text-shadow: 0 0 15px #00ff00;
+    animation: bounce 0.4s ease infinite alternate;
+}
+
+@keyframes bounce {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+footer {
+    background: #111;
+    text-align: center;
+    padding: 20px;
+    border-top: 2px solid gold;
+    color: #aaa;
+    margin-top: auto;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">PinoyJackpot</div>
+    <nav>
+        <a href="index.html">🏠 Home</a>
+    </nav>
+</header>
+
+<div class="game-container">
+    <h1>🎰 Royal Slot 🎰</h1>
+    <div class="balance-display">Credits: <span id="balance">1000</span></div>
+
+    <div class="slot-machine">
+        <div class="reels">
+            <div class="reel" id="reel1">👑</div>
+            <div class="reel" id="reel2">💎</div>
+            <div class="reel" id="reel3">🍒</div>
+        </div>
+
+        <button class="btn" id="spin-btn" onclick="spin()">SPIN (Cost: 10)</button>
+        <div class="message" id="msg">Test your luck!</div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 PinoyJackpot. All rights reserved.</p>
+</footer>
+
+<!-- Audio Assets mapped directly to your directory files -->
+<audio id="spin-sound" src="spin.mp3"></audio>
+<audio id="win-sound" src="win.mp3"></audio>
+
+<script>
+const symbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '💎', '👑'];
+let balance = 1000;
+const spinCost = 10;
+
+const reel1 = document.getElementById('reel1');
+const reel2 = document.getElementById('reel2');
+const reel3 = document.getElementById('reel3');
+const spinBtn = document.getElementById('spin-btn');
+const balanceDisplay = document.getElementById('balance');
+const msgDisplay = document.getElementById('msg');
+const spinSound = document.getElementById('spin-sound');
+const winSound = document.getElementById('win-sound');
+
+function getRandomSymbol() {
+    return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function spin() {
+    if (balance < spinCost) {
+        msgDisplay.className = "message";
+        msgDisplay.innerText = "Insufficient Credits! Refresh to restart.";
+        return;
+    }
+
+    // Deduct balance
+    balance -= spinCost;
+    balanceDisplay.innerText = balance;
+    
+    // Reset messages and disable button
+    msgDisplay.className = "message";
+    msgDisplay.innerText = "Spinning...";
+    spinBtn.disabled = true;
+
+    // Play Spin Audio
+    spinSound.currentTime = 0;
+    spinSound.play().catch(e => console.log("Audio play blocked until user interacts."));
+
+    // Simulate slot reel spinning animation using intervals
+    let count = 0;
+    const interval = setInterval(() => {
+        reel1.innerText = getRandomSymbol();
+        reel2.innerText = getRandomSymbol();
+        reel3.innerText = getRandomSymbol();
+        count++;
+        
+        if (count > 15) {
+            clearInterval(interval);
+            finalizeResult();
+        }
+    }, 70);
+}
+
+function finalizeResult() {
+    const res1 = getRandomSymbol();
+    const res2 = getRandomSymbol();
+    const res3 = getRandomSymbol();
+
+    reel1.innerText = res1;
+    reel2.innerText = res2;
+    reel3.innerText = res3;
+
+    // Check Win Conditions
+    if (res1 === res2 && res2 === res3) {
+        // Jackpot! Three of a kind
+        let payout = 200;
+        if (res1 === '👑') payout = 500;
+        if (res1 === '💎') payout = 400;
+
+        balance += payout;
+        msgDisplay.innerText = `🎉 JACKPOT! You won ${payout} credits! 🎉`;
+        msgDisplay.className = "message win-message";
+        
+        winSound.currentTime = 0;
+        winSound.play().catch(e => {});
+    } else if (res1 === res2 || res2 === res3 || res1 === res3) {
+        // Two of a kind
+        balance += 20;
+        msgDisplay.innerText = "Nice! Match 2! Won 20 credits.";
+        msgDisplay.className = "message win-message";
+        
+        winSound.currentTime = 0;
+        winSound.play().catch(e => {});
+    } else {
+        msgDisplay.innerText = "No luck this time. Try again!";
+    }
+
+    balanceDisplay.innerText = balance;
+    spinBtn.disabled = false;
+}
+</script>
+
+</body>
+</html>
