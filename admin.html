@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
 <body>
-    <h1 id="check">Loading Page...</h1>
+    <h2 id="status">Connecting to Firebase...</h2>
     <script>
-        document.getElementById("check").innerText = "The page is loading correctly!";
+        try {
+            const config = {
+                apiKey: "AIzaSyBpU119Hs4XUySvkwhD0bs0IgPvC2Z5P3c",
+                projectId: "pinoyjackpot-3bb5f"
+            };
+            firebase.initializeApp(config);
+            const db = firebase.firestore();
+            document.getElementById("status").innerText = "Firebase Initialized. Checking database...";
+            
+            db.collection("test").doc("ping").set({ status: "online" })
+                .then(() => document.getElementById("status").innerText = "SUCCESS: Connected and wrote to database!")
+                .catch((err) => document.getElementById("status").innerText = "ERROR: " + err.message);
+        } catch (e) {
+            document.getElementById("status").innerText = "CRITICAL ERROR: " + e.message;
+        }
     </script>
 </body>
 </html>
