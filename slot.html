@@ -8,184 +8,200 @@
 <style>
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    background: #050505;
+    font-family: 'Arial Black', sans-serif;
+    background: #0d0404; /* Dark red/brown casino background */
     color: white;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background:
-    radial-gradient(circle at 20% 20%, rgba(255,215,0,.15), transparent 35%),
-    radial-gradient(circle at 80% 70%, rgba(255,215,0,.12), transparent 35%),
-    linear-gradient(#050505, #101010);
-    z-index: -2;
+    user-select: none;
 }
 
 header {
     width: 100%;
-    background: rgba(0,0,0,.8);
-    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,.9);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
-    border-bottom: 2px solid gold;
+    padding: 12px 20px;
+    border-bottom: 2px solid #ffd700;
     box-sizing: border-box;
 }
 
 .logo {
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 24px;
     color: #ffd700;
-    text-shadow: 0 0 15px gold;
+    text-shadow: 0 0 10px gold;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: .3s;
-}
+nav a { color: white; text-decoration: none; font-size: 14px; }
 
-nav a:hover { color: #ffd700; }
-
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+.game-machine {
     width: 100%;
-    max-width: 480px;
-    box-sizing: border-box;
-}
-
-h1 {
-    color: #ffd700;
-    font-size: 36px;
-    text-shadow: 0 0 15px gold;
-    margin: 10px 0 0 0;
-}
-
-.sub-title {
-    color: #ffae00;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 3px;
-    margin-bottom: 15px;
-}
-
-/* JILI Multiplier Board */
-.multiplier-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    background: #111;
-    padding: 8px 16px;
-    border-radius: 30px;
-    border: 1px solid gold;
-}
-
-.mult {
-    font-weight: bold;
-    font-size: 14px;
-    padding: 4px 12px;
+    max-width: 450px;
+    background: linear-gradient(180deg, #4a1212 0%, #1a0505 100%);
+    border: 4px solid #b8860b;
     border-radius: 15px;
-    color: #444;
-}
-
-.mult.active {
-    color: black;
-    background: linear-gradient(90deg, #ffd700, #ffae00);
-    box-shadow: 0 0 10px gold;
-}
-
-.balance-display {
-    font-size: 22px;
-    margin-bottom: 15px;
-}
-.balance-display span { color: #ffd700; font-weight: bold; }
-
-/* 3x3 Cards Grid Setup */
-.grid-container {
-    background: #161616;
-    border: 3px solid gold;
-    border-radius: 20px;
-    padding: 15px;
-    box-shadow: 0 0 30px rgba(255,215,0,0.2);
-    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     box-sizing: border-box;
+    position: relative;
 }
 
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
+/* JILI Multiplier Header Bar */
+.multiplier-header {
+    background: #000;
+    border: 2px solid #ffae00;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    padding: 6px;
+    margin-bottom: 12px;
 }
 
-.card-slot {
-    height: 100px;
-    background: #fff;
-    color: black;
+.mult-val {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    transition: 0.3s;
+}
+
+.mult-val.active {
+    color: #fff;
+    background: #e67e22;
+    padding: 0 12px;
     border-radius: 10px;
+    box-shadow: 0 0 10px #ffae00;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* Status Banner for Free Spins indicator */
+.status-banner {
+    text-align: center;
+    color: #ffd700;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 5x4 Grid Layout matching the screenshot */
+.grid-5x4 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    background: rgba(0,0,0,0.6);
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* Card Styling mimicking JILI layout */
+.card-slot {
+    height: 75px;
+    background: #fdfefe;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    transition: all 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
     position: relative;
-    border: 2px solid #ccc;
-}
-
-/* Golden Card State */
-.card-slot.golden {
-    background: linear-gradient(135deg, #ffe066, #f5b041);
-    border: 2px solid gold;
-    color: #fff;
-    text-shadow: 1px 1px 3px black;
-    box-shadow: 0 0 12px gold;
-}
-
-/* Joker / Wild Card State */
-.card-slot.joker {
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
-    border: 2px solid #be2edd;
-    color: gold;
-    text-shadow: 0 0 8px white;
-    box-shadow: 0 0 15px #be2edd;
-    font-size: 22px;
-}
-
-.btn {
-    padding: 15px;
-    background: linear-gradient(90deg, #ffd700, #ffae00);
+    border: 1px solid #ccc;
     color: black;
-    font-weight: bold;
-    font-size: 18px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 0 20px gold;
-    width: 100%;
 }
-.btn:disabled { background: #444; color: #777; box-shadow: none; cursor: not-allowed; }
 
-.message {
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: bold;
+.card-slot.hearts, .card-slot.diamonds { color: #d32f2f; }
+.card-slot.spades, .card-slot.clubs { color: #212121; }
+
+/* Golden Card */
+.card-slot.golden {
+    background: linear-gradient(135deg, #fff3b0 0%, #ca9e2e 100%);
+    border: 1px solid gold;
+    color: #fff !important;
+    text-shadow: 1px 1px 2px #000;
+    box-shadow: 0 0 8px gold;
+}
+
+/* Joker Wildcard */
+.card-slot.joker {
+    background: linear-gradient(135deg, #9b59b6 0%, #4a148c 100%);
+    border: 1px solid #e040fb;
+    color: #ffd700 !important;
+    font-size: 14px;
+    text-shadow: 0 0 5px white;
+}
+
+/* Scatter Gold Coin */
+.card-slot.scatter {
+    background: radial-gradient(circle, #fff700 0%, #ff6a00 100%);
+    border: 2px solid gold;
+    color: white !important;
+    font-size: 12px;
+    text-shadow: 1px 1px 2px black;
+    border-radius: 50%;
+}
+
+/* Big Big Win Pop-Up Effects */
+.overlay-msg {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 5;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+.overlay-content {
+    color: #ffae00;
+    font-size: 40px;
+    text-shadow: 0 0 20px red;
+    animation: bounce 0.5s infinite alternate;
     text-align: center;
-    min-height: 25px;
+}
+
+/* Dashboard Panel Control Interface */
+.control-panel {
+    width: 100%;
+    max-width: 450px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 2px solid #b8860b;
+    box-sizing: border-box;
+}
+
+.data-box { text-align: center; }
+.data-box label { font-size: 11px; color: #888; text-transform: uppercase; display: block;}
+.data-box span { font-size: 18px; color: gold; font-weight: bold; }
+
+.spin-circle-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700 0%, #cc8800 100%);
+    border: 3px solid #fff;
+    font-weight: bold;
+    font-size: 14px;
+    color: #000;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.spin-circle-btn:disabled { background: #444; color: #888; box-shadow: none; }
+
+@keyframes bounce {
+    from { transform: scale(1); } to { transform: scale(1.1); }
 }
 </style>
 </head>
@@ -193,210 +209,252 @@ h1 {
 
 <header>
     <div class="logo">PinoyJackpot</div>
-    <nav><a href="index.html">🏠 Home</a></nav>
+    <nav><a href="index.html">🏠 Exit Game</a></nav>
 </header>
 
-<div class="game-container">
-    <h1>SUPER ACE</h1>
-    <div class="sub-title">JILI ARCADE SLOTS</div>
+<div class="game-machine">
+    <!-- Big Splash Alert overlay windows -->
+    <div class="overlay-msg" id="overlay"><div class="overlay-content" id="overlay-txt">FREE SPIN!</div></div>
 
-    <div class="multiplier-bar">
-        <div class="mult active" id="m1">x1</div>
-        <div class="mult" id="m2">x2</div>
-        <div class="mult" id="m3">x3</div>
-        <div class="mult" id="m5">x5</div>
+    <!-- JILI Active Progressive Multiplier display header layout -->
+    <div class="multiplier-header">
+        <div class="mult-val active" id="m0">x1</div>
+        <div class="mult-val" id="m1">x2</div>
+        <div class="mult-val" id="m2">x3</div>
+        <div class="mult-val" id="m3">x5</div>
     </div>
 
-    <div class="balance-display">Credits: <span id="credits">1000</span></div>
+    <div class="status-banner" id="mode-text">MAIN GAME AREA</div>
 
-    <div class="grid-container">
-        <div class="cards-grid" id="board">
-            <!-- 9 Cards will generate dynamically here via JavaScript -->
-        </div>
-        <button class="btn" id="spin-btn" onclick="triggerBetSpin()">SPIN (Cost: 10)</button>
+    <!-- The 5x4 Grid Container -->
+    <div class="grid-5x4" id="slots-board">
+        <!-- 20 Cards dynamically handled by JavaScript -->
     </div>
+</div>
 
-    <div class="message" id="msg">Golden Cards turn into JOKER Wilds on a match!</div>
+<!-- Dashboard Controls -->
+<div class="control-panel">
+    <div class="data-box">
+        <label>Bet Amount</label>
+        <span>500</span>
+    </div>
+    <button class="spin-circle-btn" id="spin-btn" onclick="processBetTrigger()">JILI</button>
+    <div class="data-box">
+        <label>Balance Credits</label>
+        <span id="balance-txt">21115</span>
+    </div>
 </div>
 
 <audio id="spin-sound" src="spin.mp3"></audio>
 <audio id="win-sound" src="win.mp3"></audio>
 
 <script>
-const values = ['J', 'Q', 'K', 'A', '♠️', '♥️'];
-let credits = 1000;
-let multiplierIdx = 0;
-const multTable = [1, 2, 3, 5];
-let isComboSpin = false;
+const basePool = ['J', 'Q', 'K', 'A', '♠️', '♥️', '♦️', '♣️'];
+let balance = 21115;
+const betCost = 500;
 
-// Keeps track of board matrices
-let currentBoardState = []; 
+let isFreeSpinMode = false;
+let freeSpinsCountRemaining = 0;
 
-function buildEmptyBoard() {
-    const boardEl = document.getElementById('board');
-    boardEl.innerHTML = '';
-    for(let i=0; i<9; i++) {
-        const d = document.createElement('div');
-        d.className = 'card-slot';
-        d.id = `c_${i}`;
-        d.innerText = '♣️';
-        boardEl.appendChild(d);
+let currentMultiplierStep = 0;
+const normMults = [1, 2, 3, 5];
+const freeMults = [2, 4, 6, 10]; // Doubled free-spin table directly from screenshot!
+
+let boardData = [];
+
+function initializeDisplay() {
+    const board = document.getElementById('slots-board');
+    board.innerHTML = '';
+    for(let i=0; i<20; i++) {
+        const item = document.createElement('div');
+        item.className = 'card-slot spades';
+        item.id = `slot_${i}`;
+        item.innerText = 'A';
+        board.appendChild(item);
     }
 }
-buildEmptyBoard();
+initializeDisplay();
 
-function updateMultiplierUI() {
+function setMultiplierLayout() {
+    const referenceArr = isFreeSpinMode ? freeMults : normMults;
+    document.getElementById('m0').innerText = 'x' + referenceArr[0];
+    document.getElementById('m1').innerText = 'x' + referenceArr[1];
+    document.getElementById('m2').innerText = 'x' + referenceArr[2];
+    document.getElementById('m3').innerText = 'x' + referenceArr[3];
+
     for(let i=0; i<4; i++) {
-        const id = ['m1','m2','m3','m5'][i];
-        document.getElementById(id).className = (multiplierIdx === i) ? "mult active" : "mult";
+        document.getElementById(`m${i}`).className = (currentMultiplierStep === i) ? "mult-val active" : "mult-val";
     }
 }
 
-function triggerBetSpin() {
-    if (credits < 10) {
-        document.getElementById('msg').innerText = "Insufficient Credits!";
-        return;
+function processBetTrigger() {
+    if(!isFreeSpinMode) {
+        if(balance < betCost) {
+            alert("Insufficient Funds!"); return;
+        }
+        balance -= betCost;
+        document.getElementById('balance-txt').innerText = balance;
     }
-    credits -= 10;
-    document.getElementById('credits').innerText = credits;
+    
     document.getElementById('spin-btn').disabled = true;
+    if(!isFreeSpinMode) currentMultiplierStep = 0;
+    setMultiplierLayout();
     
-    multiplierIdx = 0;
-    updateMultiplierUI();
-    isComboSpin = false;
-    
-    runSuperAceSpin();
+    executeShuffleCycle();
 }
 
-function runSuperAceSpin() {
+function executeShuffleCycle() {
     document.getElementById('spin-sound').currentTime = 0;
     document.getElementById('spin-sound').play().catch(()=>{});
-    document.getElementById('msg').innerText = isComboSpin ? `Combo Spin! x${multTable[multiplierIdx]} active!` : "Shuffling Cards...";
 
-    let shuffles = 0;
-    const loop = setInterval(() => {
-        for(let i=0; i<9; i++) {
-            // Don't overwrite existing Joker wildcards if it's a cascading combo loop!
-            if(isComboSpin && currentBoardState[i] && currentBoardState[i].isJoker) continue;
-
-            const val = values[Math.floor(Math.random() * values.length)];
-            const cardEl = document.getElementById(`c_${i}`);
-            cardEl.innerText = val;
-            cardEl.className = 'card-slot';
-            cardEl.style.color = (val==='♥️') ? 'red' : 'black';
+    let counts = 0;
+    const interval = setInterval(() => {
+        for(let i=0; i<20; i++) {
+            // Keep persistence on active cascading items
+            if(isFreeSpinMode && boardData[i]?.isJoker) continue; 
+            
+            const randVal = basePool[Math.floor(Math.random() * basePool.length)];
+            const target = document.getElementById(`slot_${i}`);
+            target.className = 'card-slot';
+            target.innerText = randVal;
+            if(randVal === '♥️' || randVal === '♦️') target.classList.add('hearts');
         }
-        shuffles++;
-        if(shuffles > 10) {
-            clearInterval(loop);
-            evaluateBoardLogic();
+        counts++;
+        if(counts > 12) {
+            clearInterval(interval);
+            calculateWinMatrix();
         }
     }, 60);
 }
 
-function evaluateBoardLogic() {
-    // 1. Gather values
-    if(!isComboSpin) {
-        currentBoardState = [];
-        for(let i=0; i<9; i++) {
-            const val = document.getElementById(`c_${i}`).innerText;
-            // 35% chance a regular card spawns as a JILI Golden Card
-            const isGold = Math.random() < 0.35 && val !== '♥️' && val !== '♠️'; 
-            currentBoardState.push({ text: val, isGold: isGold, isJoker: false });
+function calculateWinMatrix() {
+    // Generate actual locked definitions array
+    if(boardData.length === 0 || currentMultiplierStep === 0) {
+        boardData = [];
+        let scatterRollCount = 0;
+        for(let i=0; i<20; i++) {
+            let itemVal = basePool[Math.floor(Math.random() * basePool.length)];
+            let isScatter = false;
+            let isGold = false;
+
+            // Roll Scatters randomly up to 3 max
+            if(Math.random() < 0.08 && scatterRollCount < 3) {
+                isScatter = true;
+                scatterRollCount++;
+            } else if (Math.random() < 0.22 && ['J','Q','K','A'].includes(itemVal)) {
+                isGold = true;
+            }
+
+            boardData.push({ text: itemVal, isGold: isGold, isJoker: false, isScatter: isScatter });
         }
     }
 
-    // Render exact styles onto the grid array
-    for(let i=0; i<9; i++) {
-        const el = document.getElementById(`c_${i}`);
-        const data = currentBoardState[i];
-        el.innerText = data.text;
-        el.className = 'card-slot';
-        el.style.color = (data.text === '♥️') ? 'red' : 'black';
+    // Paint values to DOM
+    let currentScattersOnScreen = 0;
+    for(let i=0; i<20; i++) {
+        const cell = document.getElementById(`slot_${i}`);
+        const data = boardData[i];
+        cell.className = 'card-slot';
+        cell.innerText = data.text;
 
-        if(data.isGold) el.classList.add('golden');
+        if(data.text==='♥️' || data.text==='♦️') cell.classList.add('hearts');
+        if(data.isGold) cell.classList.add('golden');
+        if(data.isScatter) {
+            cell.className = 'card-slot scatter';
+            cell.innerHTML = '🪙<br>SCATTER';
+            currentScattersOnScreen++;
+        }
         if(data.isJoker) {
-            el.classList.add('joker');
-            el.innerText = '🃏 JOKER';
-            el.style.color = 'gold';
+            cell.className = 'card-slot joker';
+            cell.innerText = '🃏 JOKER';
         }
     }
 
-    // 2. Scan lines for matches (Row 1, Row 2, Row 3)
-    let totalWin = 0;
-    let matchedIndexes = new Set();
+    // Line scanning simulations
+    let basePay = 0;
+    let registeredWin = false;
+    let hitList = new Set();
 
-    const checkLine = (idx1, idx2, idx3) => {
-        const c1 = currentBoardState[idx1];
-        const c2 = currentBoardState[idx2];
-        const c3 = currentBoardState[idx3];
-
-        // Match check supporting Jokers as Wildcards
-        const v1 = c1.text; const v2 = c2.text; const v3 = c3.text;
-        const w1 = c1.isJoker; const w2 = c2.isJoker; const w3 = c3.isJoker;
-
-        let match = false;
-        if ((v1===v2 || w1 || w2) && (v2===v3 || w2 || w3) && (v1===v3 || w1 || w3)) {
-            match = true;
+    // Standard checking row combinations
+    for(let row = 0; row < 4; row++) {
+        let offset = row * 5;
+        let v1 = boardData[offset], v2 = boardData[offset+1], v3 = boardData[offset+2];
+        if((v1.text === v2.text || v1.isJoker || v2.isJoker) && (v2.text === v3.text || v2.isJoker || v3.isJoker)) {
+            registeredWin = true;
+            hitList.add(offset); hitList.add(offset+1); hitList.add(offset+2);
+            basePay += 300;
         }
+    }
 
-        if(match) {
-            matchedIndexes.add(idx1);
-            matchedIndexes.add(idx2);
-            matchedIndexes.add(idx3);
-            totalWin += 20; // base win credits per match line
-        }
-    };
+    // Scatter evaluation 
+    if(currentScattersOnScreen >= 3 && !isFreeSpinMode) {
+        triggerFreeSpinSequence();
+        return;
+    }
 
-    checkLine(0, 1, 2); // Row 1
-    checkLine(3, 4, 5); // Row 2
-    checkLine(6, 7, 8); // Row 3
+    if(registeredWin) {
+        const targetMultiplierArr = isFreeSpinMode ? freeMults : normMults;
+        let multiplierValue = targetMultiplierArr[currentMultiplierStep];
+        let massiveWinPayout = basePay * multiplierValue;
 
-    if(totalWin > 0) {
-        // Apply multiplier factor
-        let finalPayout = totalWin * multTable[multiplierIdx];
-        credits += finalPayout;
-        document.getElementById('credits').innerText = credits;
-
+        balance += massiveWinPayout;
+        document.getElementById('balance-txt').innerText = balance;
+        
         document.getElementById('win-sound').currentTime = 0;
         document.getElementById('win-sound').play().catch(()=>{});
-        document.getElementById('msg').innerHTML = `<span style="color:#00ff00;">Match Line! Won ${finalPayout} Credits!</span>`;
 
-        // Golden Card conversion loop to Jokers
-        matchedIndexes.forEach(idx => {
-            if(currentBoardState[idx].isGold) {
-                currentBoardState[idx].isGold = false;
-                currentBoardState[idx].isJoker = true; // Flips to persistent Wild!
-            } else if (!currentBoardState[idx].isJoker) {
-                // Regular cards clear out completely to drop new randoms
-                currentBoardState[idx] = { text: '♣️', isGold: false, isJoker: false };
+        // Mutate golden hits to persistent Jokers Wildcard
+        hitList.forEach(idx => {
+            if(boardData[idx].isGold) {
+                boardData[idx].isGold = false;
+                boardData[idx].isJoker = true;
+            } else if(!boardData[idx].isJoker) {
+                boardData[idx] = { text: basePool[Math.floor(Math.random()*basePool.length)], isGold: false, isJoker: false };
             }
         });
 
-        // Level up the multiplier ceiling
-        if(multiplierIdx < 3) multiplierIdx++;
-        updateMultiplierUI();
-        isComboSpin = true;
+        if(currentMultiplierStep < 3) currentMultiplierStep++;
+        setMultiplierLayout();
 
-        // Auto-trigger the cascading elimination free match spin
         setTimeout(() => {
-            runSuperAceSpin();
-        }, 1500);
-
+            executeShuffleCycle();
+        }, 1400);
     } else {
-        // No match resets system completely back to basic operational configurations
-        document.getElementById('msg').innerText = "No matches. Spin again!";
-        multiplierIdx = 0;
-        updateMultiplierUI();
-        
-        // Remove old Jokers for the next clean user bet pull
-        for(let i=0; i<9; i++) {
-            if(currentBoardState[i]) currentBoardState[i].isJoker = false;
+        // Clear matching loop sets out
+        if(isFreeSpinMode && freeSpinsCountRemaining > 0) {
+            freeSpinsCountRemaining--;
+            document.getElementById('mode-text').innerText = `FREE SPINS LEFT: ${freeSpinsCountRemaining}`;
+            if(freeSpinsCountRemaining <= 0) {
+                isFreeSpinMode = false;
+                document.getElementById('mode-text').innerText = "MAIN GAME AREA";
+                currentMultiplierStep = 0;
+            }
+            setMultiplierLayout();
+            setTimeout(() => { processBetTrigger(); }, 1200);
+        } else {
+            boardData = [];
+            setMultiplierLayout();
+            document.getElementById('spin-btn').disabled = false;
         }
-        
-        document.getElementById('spin-btn').disabled = false;
     }
 }
-</script>
 
+function triggerFreeSpinSequence() {
+    const layer = document.getElementById('overlay');
+    const layerTxt = document.getElementById('overlay-txt');
+    layerTxt.innerHTML = "🎰 BONUS 🎰<br>FREE SPINS ACCESSED";
+    layer.style.display = 'flex';
+
+    setTimeout(() => {
+        layer.style.display = 'none';
+        isFreeSpinMode = true;
+        freeSpinsCountRemaining = 8; // Granting 8 standard free rounds
+        document.getElementById('mode-text').innerText = `FREE SPINS LEFT: ${freeSpinsCountRemaining}`;
+        currentMultiplierStep = 0;
+        setMultiplierLayout();
+        processBetTrigger();
+    }, 2000);
+}
+</script>
 </body>
 </html>
