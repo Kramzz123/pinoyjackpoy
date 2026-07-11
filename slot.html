@@ -1,9 +1,14 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Super Ace - JILI Gaming</title>
+<!-- Firebase SDKs Compat -->
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 <style>
     * {
         box-sizing: border-box;
@@ -202,22 +207,70 @@
         font-family: Arial, sans-serif;
         margin-bottom: 2px;
     }
+    
+    /* Interactive Bet Buttons Container */
+    .bet-adjuster-box {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 2px;
+    }
+    .bet-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+        border: 1px solid #fff;
+        color: #000;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .bet-btn:active {
+        transform: scale(0.9);
+    }
+    .bet-btn:disabled {
+        background: #334155;
+        border-color: #475569;
+        color: #64748b;
+        cursor: not-allowed;
+    }
+    
     .console-value {
         font-size: 15px;
         color: #fadb14;
         font-weight: bold;
+        min-width: 38px;
+        text-align: center;
+    }
+    .cashier-actions {
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
     }
     .deposit-action-trigger {
         background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
         color: #fff;
         border: none;
         font-size: 10px;
-        padding: 3px 8px;
-        border-radius: 10px;
+        padding: 3px 6px;
+        border-radius: 6px;
         cursor: pointer;
         font-weight: bold;
-        margin-top: 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .withdraw-action-trigger {
+        background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
+        color: #fff;
+        border: none;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
     }
 
     /* Authentic Round Spin Dial Button */
@@ -379,7 +432,7 @@
 <header>
     <div class="jili-tag">JILI</div>
     <div class="user-info-area">
-        <span class="user-name-label" id="user-welcome">👤 Guest</span>
+        <span class="user-name-label" id="user-welcome">👤 Loading...</span>
         <button class="logout-action-btn" onclick="handleLogout()">Logout</button>
     </div>
 </header>
@@ -405,86 +458,118 @@
 <div class="bottom-control-console">
     <div class="console-pane">
         <span class="console-label">Bet</span>
-        <span class="console-value" style="color: #fff;">500</span>
+        <div class="bet-adjuster-box">
+            <button class="bet-btn" id="bet-minus-btn" onclick="adjustBet(-1)">-</button>
+            <span class="console-value" id="bet-display" style="color: #fff;">10</span>
+            <button class="bet-btn" id="bet-plus-btn" onclick="adjustBet(1)">+</button>
+        </div>
     </div>
 
     <div class="spin-dial-outer">
-        <button class="spin-dial-button" id="spin-btn" onclick="triggerMainSpin()">JILI</button>
+        <button class="spin-dial-button" id="spin-btn" onclick="triggerMainSpin()" disabled>JILI</button>
     </div>
 
     <div class="console-pane" style="text-align: right; align-items: flex-end;">
         <span class="console-label">Balance</span>
         <span class="console-value" id="balance-display">0.00</span>
-        <button class="deposit-action-trigger" onclick="openDepositModal()">💸 Deposit</button>
+        <div class="cashier-actions">
+            <button class="deposit-action-trigger" onclick="openDepositModal()">💸 Deposit</button>
+            <button class="withdraw-action-trigger" onclick="openWithdrawModal()">🏦 Cashout</button>
+        </div>
     </div>
 </div>
 
-<!-- CASHIER DEPOSIT MODAL -->
+<!-- DEPOSIT MODAL -->
 <div class="modal-overlay" id="deposit-modal">
     <div class="modal-box">
-        <div class="modal-title">💸 PINOYJACKPOT CASHIER</div>
-        
+        <div class="modal-title">💸 DEPOSIT REQUEST</div>
         <div class="qr-container">
-            <!-- DEFAULT QR CODE PLACEHOLDER. Replace "src" with your actual GCash/Maya QR URL -->
             <svg class="qr-image" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer borders -->
                 <rect x="0" y="0" width="100" height="100" fill="white" />
                 <rect x="10" y="10" width="25" height="25" fill="black" />
                 <rect x="13" y="13" width="19" height="19" fill="white" />
                 <rect x="16" y="16" width="13" height="13" fill="black" />
-                
                 <rect x="65" y="10" width="25" height="25" fill="black" />
                 <rect x="68" y="13" width="19" height="19" fill="white" />
                 <rect x="71" y="16" width="13" height="13" fill="black" />
-                
                 <rect x="10" y="65" width="25" height="25" fill="black" />
                 <rect x="13" y="68" width="19" height="19" fill="white" />
                 <rect x="16" y="71" width="13" height="13" fill="black" />
-                
-                <!-- Random QR pixels -->
                 <rect x="42" y="15" width="5" height="10" fill="black"/>
                 <rect x="50" y="25" width="8" height="5" fill="black"/>
                 <rect x="45" y="40" width="10" height="10" fill="black"/>
-                <rect x="15" y="48" width="12" height="6" fill="black"/>
                 <rect x="70" y="45" width="15" height="8" fill="black"/>
-                <rect x="40" y="65" width="8" height="15" fill="black"/>
-                <rect x="55" y="75" width="12" height="12" fill="black"/>
-                <rect x="78" y="68" width="8" height="8" fill="black"/>
-                <!-- Decorative blue brand dot in the middle -->
                 <rect x="44" y="44" width="12" height="12" fill="#0055d4" />
                 <text x="50" y="52" font-size="6" font-family="Arial" fill="white" text-anchor="middle" font-weight="bold">QR</text>
             </svg>
         </div>
-
-        <p class="deposit-instructions">
-            Scan the GCash QR code above to pay.<br>
-            Please select or enter your cash-in amount below.
-        </p>
-
+        <p class="deposit-instructions">Scan GCash QR to Pay. Enter Amount and Submit.</p>
         <div class="amount-input-group">
-            <input type="number" id="deposit-amount-input" class="amount-input" value="1000" min="100">
+            <input type="number" id="deposit-amount-input" class="amount-input" value="1000" min="10">
         </div>
-
         <div class="quick-amounts">
-            <button class="quick-btn" onclick="selectQuickAmount(100)">₱100</button>
-            <button class="quick-btn" onclick="selectQuickAmount(500)">₱500</button>
-            <button class="quick-btn" onclick="selectQuickAmount(1000)">₱1,000</button>
-            <button class="quick-btn" onclick="selectQuickAmount(5000)">₱5,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 100)">₱100</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 500)">₱500</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 1000)">₱1,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 5000)">₱5,000</button>
         </div>
-
         <div class="modal-actions">
             <button class="action-btn action-cancel" onclick="closeDepositModal()">Cancel</button>
-            <button class="action-btn action-submit" onclick="submitDeposit()">I have Paid</button>
+            <button class="action-btn action-submit" onclick="submitDeposit()">I Have Paid</button>
+        </div>
+    </div>
+</div>
+
+<!-- WITHDRAW MODAL -->
+<div class="modal-overlay" id="withdraw-modal">
+    <div class="modal-box">
+        <div class="modal-title" style="color: #e67e22;">🏦 GCASH CASHOUT</div>
+        <p class="deposit-instructions" style="margin-top: 10px;">Enter the amount and GCash Details to withdraw.</p>
+        <div class="amount-input-group">
+            <input type="number" id="withdraw-amount-input" class="amount-input" value="500" min="50" style="color: #e67e22;">
+        </div>
+        <div class="quick-amounts">
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 100)">₱100</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 500)">₱500</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 1000)">₱1,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 5000)">₱5,000</button>
+        </div>
+        <div class="amount-input-group">
+            <input type="text" id="withdraw-account-input" class="amount-input" placeholder="GCash Name & Number" style="font-size: 14px; margin-top: 5px;">
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn action-cancel" onclick="closeWithdrawModal()">Cancel</button>
+            <button class="action-btn action-submit" style="background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);" onclick="submitWithdraw()">Submit Cashout</button>
         </div>
     </div>
 </div>
 
 <script>
+    // --- FIREBASE INITIALIZATION ---
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'pinoyjackpot-default';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        apiKey: "demo-key-placeholder",
+        authDomain: "demo.firebaseapp.com",
+        projectId: "demo",
+        storageBucket: "demo.appspot.com",
+        messagingSenderId: "123",
+        appId: "1:123:web:123"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
     const symbolsArr = ['J', 'Q', 'K', 'A', '♠️', '♥️', '♦️', '♣️'];
-    const betCost = 500;
+    const betLevels = [1, 2, 3, 5, 10, 20, 30, 40, 50, 60, 100, 200, 300, 400, 500, 1000, 2000, 5000];
+    let currentBetIndex = 4; // default bet is 10
+    let betCost = betLevels[currentBetIndex];
     
     let username = localStorage.getItem('currentUser') || 'Guest';
-    let balance = parseInt(localStorage.getItem(`balance_${username}`)) || 0;
+    let balance = 0;
+    let authUser = null;
     
     let isFreeSpin = false;
     let freeSpinsRemaining = 0;
@@ -502,119 +587,22 @@
         }
     }
 
-    function syncAccountData() {
-        document.getElementById('user-welcome').innerText = `👤 ${username}`;
-        document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
-    }
+    // --- REALTIME FIRESTORE WALLET SYNC ---
+    async function startRealtimeSync() {
+        if (!authUser) return;
 
-    function createEmptySlots() {
-        const board = document.getElementById('board-matrix');
-        board.innerHTML = '';
-        for(let i=0; i<20; i++) {
-            const slot = document.createElement('div');
-            slot.className = 'card-slot';
-            slot.id = `tile_${i}`;
-            slot.innerText = 'A';
-            board.appendChild(slot);
-        }
-        syncAccountData();
-    }
-    createEmptySlots();
+        // Path validation per Rule 1: /artifacts/{appId}/public/data/wallets
+        const walletRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('wallets').doc(username);
 
-    function saveBalance() {
-        localStorage.setItem(`balance_${username}`, balance);
-        document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
-    }
-
-    /* CASHIER MODAL LOGIC */
-    function openDepositModal() {
-        playAudio('sound-deposit');
-        document.getElementById('deposit-modal').style.display = 'flex';
-    }
-
-    function closeDepositModal() {
-        document.getElementById('deposit-modal').style.display = 'none';
-    }
-
-    function selectQuickAmount(amount) {
-        document.getElementById('deposit-amount-input').value = amount;
-    }
-
-    function submitDeposit() {
-        const amountInput = document.getElementById('deposit-amount-input');
-        const parsed = parseInt(amountInput.value);
-        if(parsed > 0) {
-            balance += parsed;
-            saveBalance();
-            closeDepositModal();
-            alert(`🎰 Cashier verified: ₱${parsed.toLocaleString()} added to your game wallet!`);
-        } else {
-            alert("Please enter a valid deposit amount.");
-        }
-    }
-
-    function updateMultiplierDisplay() {
-        const referenceScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
-        for(let i=0; i<4; i++) {
-            const el = document.getElementById(`m_${i}`);
-            el.innerText = '×' + referenceScale[i];
-            el.className = (comboMultiplierStep === i) ? 'mult-node active' : 'mult-node';
-        }
-    }
-
-    function triggerMainSpin() {
-        if(!isFreeSpin && comboMultiplierStep === 0) {
-            if(balance < betCost) { 
-                openDepositModal();
-                return; 
+        // Fetch or create player's wallet
+        walletRef.onSnapshot((doc) => {
+            if (doc.exists) {
+                balance = doc.data().balance || 0;
+            } else {
+                walletRef.set({ balance: 0, username: username });
+                balance = 0;
             }
-            balance -= betCost;
-            saveBalance();
-        }
-        document.getElementById('spin-btn').disabled = true;
-        updateMultiplierDisplay();
-        playAudio('sound-spin');
-        runShuffleAnimation();
-    }
-
-    function runShuffleAnimation() {
-        let shuffles = 0;
-        const speedLoop = setInterval(() => {
-            for(let i=0; i<20; i++) {
-                if(boardGridArray[i]?.isJoker) continue;
-                const tempSym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
-                const el = document.getElementById(`tile_${i}`);
-                el.className = 'card-slot';
-                el.innerText = tempSym;
-                if(tempSym === '♥️' || tempSym === '♦️') el.classList.add('red-suit');
-            }
-            shuffles++;
-            if(shuffles > 12) {
-                clearInterval(speedLoop);
-                processWaysToWinLogic();
-            }
-        }, 60);
-    }
-
-    function processWaysToWinLogic() {
-        let scatterCounter = 0;
-        for(let i=0; i<20; i++) {
-            if(comboMultiplierStep === 0 && !isFreeSpin) {
-                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
-                let isScat = Math.random() < 0.04;
-                let isG = !isScat && Math.random() < 0.22 && ['J','Q','K','A'].includes(sym);
-                if(isScat) scatterCounter++;
-                boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: isScat };
-            } else if (!boardGridArray[i].isJoker) {
-                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
-                let isG = Math.random() < 0.15 && ['J','Q','K','A'].includes(sym);
-                boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: false };
-            }
-        }
-
-        for(let i=0; i<20; i++) {
-            const tile = document.getElementById(`tile_${i}`);
-            const data = boardGridArray[i];
-            tile.className = 'card-slot';
-            tile.innerText = data.text;
-     
+            document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
+            document.getElementById('spin-btn').disabled = false;
+        }, (error) => {
+            console.error("Firestore balance stream failed:", error
