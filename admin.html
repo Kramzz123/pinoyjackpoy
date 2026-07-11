@@ -1,46 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Super Ace - JILI Gaming</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<style>
-    body { background: #060d1a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-</style>
-</head>
+<html>
 <body>
-
-<div id="status">Loading...</div>
-
-<script>
-    // --- FIREBASE CONFIGURATION ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBpU119Hs4XUySvkwhD0bs0IgPvC2Z5P3c",
-        authDomain: "pinoyjackpot-3bb5f.firebaseapp.com",
-        projectId: "pinoyjackpot-3bb5f",
-        storageBucket: "pinoyjackpot-3bb5f.appspot.com",
-        messagingSenderId: "78201419930",
-        appId: "1:78201419930:web:6e595e54c22a72bcb00723"
-    };
-
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // Sign in and load data
-    auth.signInAnonymously().then(() => {
-        document.getElementById('status').innerText = "Connected to Database!";
-        console.log("Logged in successfully");
-        // Add your admin or game logic here
-    }).catch((error) => {
-        document.getElementById('status').innerText = "Error: " + error.message;
-    });
-</script>
+    <h2 id="status">Connecting...</h2>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const config = {
+            apiKey: "AIzaSyBpU119Hs4XUySvkwhD0bs0IgPvC2Z5P3c",
+            projectId: "pinoyjackpot-3bb5f"
+        };
+        firebase.initializeApp(config);
+        const db = firebase.firestore();
+        
+        // Testing if we can reach the database
+        db.collection("test").doc("ping").set({ status: "online" })
+            .then(() => document.getElementById("status").innerText = "Success! Database is connected.")
+            .catch((err) => document.getElementById("status").innerText = "Error: " + err.message);
+    </script>
 </body>
 </html>
