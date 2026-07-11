@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <h2 id="status">Connecting...</h2>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <h1 id="check">Loading Page...</h1>
     <script>
-        const config = {
-            apiKey: "AIzaSyBpU119Hs4XUySvkwhD0bs0IgPvC2Z5P3c",
-            projectId: "pinoyjackpot-3bb5f"
-        };
-        firebase.initializeApp(config);
-        const db = firebase.firestore();
-        
-        // Testing if we can reach the database
-        db.collection("test").doc("ping").set({ status: "online" })
-            .then(() => document.getElementById("status").innerText = "Success! Database is connected.")
-            .catch((err) => document.getElementById("status").innerText = "Error: " + err.message);
+        document.getElementById("check").innerText = "The page is loading correctly!";
     </script>
 </body>
 </html>
