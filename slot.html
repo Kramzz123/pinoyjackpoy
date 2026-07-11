@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PinoyJackpot - Royal Slot</title>
+<title>PinoyJackpot - Super Ace Slot</title>
 
 <style>
 body {
@@ -64,34 +64,65 @@ nav a:hover {
     text-shadow: 0 0 10px gold;
 }
 
-/* Slot Machine Container */
 .game-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    padding: 30px 20px;
 }
 
 h1 {
     color: #ffd700;
-    font-size: 48px;
+    font-size: 42px;
     text-shadow: 0 0 20px gold;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     text-align: center;
+}
+
+.sub-title {
+    color: #ffae00;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* Multiplier Dashboard bar */
+.multiplier-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #111;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid gold;
+}
+
+.mult {
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: #555;
+    transition: 0.3s;
+}
+
+.mult.active {
+    color: black;
+    background: linear-gradient(90deg, #ffd700, #ffae00);
+    box-shadow: 0 0 15px gold;
+    transform: scale(1.1);
 }
 
 .balance-display {
     font-size: 24px;
     color: #fff;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .balance-display span {
     color: #ffd700;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(255,215,0,0.5);
 }
 
 .slot-machine {
@@ -118,15 +149,17 @@ h1 {
 
 .reel {
     width: 90px;
-    height: 90px;
-    background: #181818;
-    border: 2px solid gold;
-    border-radius: 10px;
-    font-size: 50px;
-    line-height: 90px;
+    height: 120px;
+    background: #fff; /* White background like a real card */
+    color: black;
+    border: 3px solid gold;
+    border-radius: 12px;
+    font-size: 45px;
+    line-height: 120px;
     text-align: center;
+    font-weight: bold;
     user-select: none;
-    transition: transform 0.1s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .btn {
@@ -163,18 +196,11 @@ h1 {
     font-size: 22px;
     font-weight: bold;
     min-height: 30px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
 .win-message {
     color: #00ff00;
     text-shadow: 0 0 15px #00ff00;
-    animation: bounce 0.4s ease infinite alternate;
-}
-
-@keyframes bounce {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
 }
 
 footer {
@@ -197,18 +223,28 @@ footer {
 </header>
 
 <div class="game-container">
-    <h1>🎰 Royal Slot 🎰</h1>
+    <h1>SUPER ACE</h1>
+    <div class="sub-title">JILI CASINO EDITION</div>
+
+    <!-- JILI Style Multiplier Display -->
+    <div class="multiplier-bar">
+        <div class="mult active" id="m1">x1</div>
+        <div class="mult" id="m2">x2</div>
+        <div class="mult" id="m3">x3</div>
+        <div class="mult" id="m5">x5</div>
+    </div>
+
     <div class="balance-display">Credits: <span id="balance">1000</span></div>
 
     <div class="slot-machine">
         <div class="reels">
-            <div class="reel" id="reel1">👑</div>
-            <div class="reel" id="reel2">💎</div>
-            <div class="reel" id="reel3">🍒</div>
+            <div class="reel" id="reel1" style="color: red;">♦️</div>
+            <div class="reel" id="reel2" style="color: gold; background: #222; text-shadow: 0 0 10px gold;">A</div>
+            <div class="reel" id="reel3" style="color: black;">♠️</div>
         </div>
 
-        <button class="btn" id="spin-btn" onclick="spin()">SPIN (Cost: 10)</button>
-        <div class="message" id="msg">Test your luck!</div>
+        <button class="btn" id="spin-btn" onclick="startSpin()">SPIN (Cost: 10)</button>
+        <div class="message" id="msg">Match symbols to trigger Multipliers!</div>
     </div>
 </div>
 
@@ -216,101 +252,154 @@ footer {
     <p>&copy; 2026 PinoyJackpot. All rights reserved.</p>
 </footer>
 
-<!-- Audio Assets mapped directly to your directory files -->
 <audio id="spin-sound" src="spin.mp3"></audio>
 <audio id="win-sound" src="win.mp3"></audio>
 
 <script>
-const symbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '💎', '👑'];
+// Card symbols: J, Q, K, A, and Suits
+const symbols = [
+    { text: '♣️', color: 'black', bg: '#fff' },
+    { text: '♦️', color: 'red', bg: '#fff' },
+    { text: '♥️', color: 'red', bg: '#fff' },
+    { text: '♠️', color: 'black', bg: '#fff' },
+    { text: 'J', color: '#b8860b', bg: '#fff' },
+    { text: 'Q', color: '#bd33a4', bg: '#fff' },
+    { text: 'K', color: '#00563b', bg: '#fff' },
+    { text: 'A', color: 'gold', bg: '#111' } // Golden Ace!
+];
+
 let balance = 1000;
 const spinCost = 10;
+let currentMultiplierIndex = 0; 
+const multipliers = [1, 2, 3, 5];
 
-const reel1 = document.getElementById('reel1');
-const reel2 = document.getElementById('reel2');
-const reel3 = document.getElementById('reel3');
 const spinBtn = document.getElementById('spin-btn');
 const balanceDisplay = document.getElementById('balance');
 const msgDisplay = document.getElementById('msg');
 const spinSound = document.getElementById('spin-sound');
 const winSound = document.getElementById('win-sound');
 
+function updateMultiplierUI() {
+    document.getElementById('m1').className = currentMultiplierIndex === 0 ? "mult active" : "mult";
+    document.getElementById('m2').className = currentMultiplierIndex === 1 ? "mult active" : "mult";
+    document.getElementById('m3').className = currentMultiplierIndex === 2 ? "mult active" : "mult";
+    document.getElementById('m5').className = currentMultiplierIndex === 3 ? "mult active" : "mult";
+}
+
+function applyCardStyle(reelElement, symbolObj) {
+    reelElement.innerText = symbolObj.text;
+    reelElement.style.color = symbolObj.color;
+    reelElement.style.background = symbolObj.bg;
+    if(symbolObj.text === 'A') {
+        reelElement.style.textShadow = "0 0 10px gold";
+    } else {
+        reelElement.style.textShadow = "none";
+    }
+}
+
 function getRandomSymbol() {
     return symbols[Math.floor(Math.random() * symbols.length)];
 }
 
-function spin() {
+function startSpin() {
     if (balance < spinCost) {
         msgDisplay.className = "message";
-        msgDisplay.innerText = "Insufficient Credits! Refresh to restart.";
+        msgDisplay.innerText = "Insufficient Credits!";
         return;
     }
 
-    // Deduct balance
     balance -= spinCost;
     balanceDisplay.innerText = balance;
-    
-    // Reset messages and disable button
-    msgDisplay.className = "message";
-    msgDisplay.innerText = "Spinning...";
     spinBtn.disabled = true;
+    
+    // Reset combo multipliers back to x1 on a brand new fresh bet spin
+    currentMultiplierIndex = 0;
+    updateMultiplierUI();
 
-    // Play Spin Audio
+    runReelAnimation();
+}
+
+function runReelAnimation() {
+    msgDisplay.className = "message";
+    msgDisplay.innerText = currentMultiplierIndex > 0 ? `Combo Spin! x${multipliers[currentMultiplierIndex]} active!` : "Spinning...";
+
     spinSound.currentTime = 0;
-    spinSound.play().catch(e => console.log("Audio play blocked until user interacts."));
+    spinSound.play().catch(()=>{});
 
-    // Simulate slot reel spinning animation using intervals
     let count = 0;
     const interval = setInterval(() => {
-        reel1.innerText = getRandomSymbol();
-        reel2.innerText = getRandomSymbol();
-        reel3.innerText = getRandomSymbol();
+        applyCardStyle(document.getElementById('reel1'), getRandomSymbol());
+        applyCardStyle(document.getElementById('reel2'), getRandomSymbol());
+        applyCardStyle(document.getElementById('reel3'), getRandomSymbol());
         count++;
         
-        if (count > 15) {
+        if (count > 12) {
             clearInterval(interval);
-            finalizeResult();
+            checkResults();
         }
     }, 70);
 }
 
-function finalizeResult() {
-    const res1 = getRandomSymbol();
-    const res2 = getRandomSymbol();
-    const res3 = getRandomSymbol();
+function checkResults() {
+    const s1 = getRandomSymbol();
+    const s2 = getRandomSymbol();
+    const s3 = getRandomSymbol();
 
-    reel1.innerText = res1;
-    reel2.innerText = res2;
-    reel3.innerText = res3;
+    const r1 = document.getElementById('reel1');
+    const r2 = document.getElementById('reel2');
+    const r3 = document.getElementById('reel3');
 
-    // Check Win Conditions
-    if (res1 === res2 && res2 === res3) {
-        // Jackpot! Three of a kind
-        let payout = 200;
-        if (res1 === '👑') payout = 500;
-        if (res1 === '💎') payout = 400;
+    applyCardStyle(r1, s1);
+    applyCardStyle(r2, s2);
+    applyCardStyle(r3, s3);
 
-        balance += payout;
-        msgDisplay.innerText = `🎉 JACKPOT! You won ${payout} credits! 🎉`;
-        msgDisplay.className = "message win-message";
-        
-        winSound.currentTime = 0;
-        winSound.play().catch(e => {});
-    } else if (res1 === res2 || res2 === res3 || res1 === res3) {
-        // Two of a kind
-        balance += 20;
-        msgDisplay.innerText = "Nice! Match 2! Won 20 credits.";
-        msgDisplay.className = "message win-message";
-        
-        winSound.currentTime = 0;
-        winSound.play().catch(e => {});
-    } else {
-        msgDisplay.innerText = "No luck this time. Try again!";
+    let baseWin = 0;
+    let isWin = false;
+
+    // Winning logic calculations
+    if (s1.text === s2.text && s2.text === s3.text) {
+        // Match 3 Jackpot
+        baseWin = s1.text === 'A' ? 100 : 50; 
+        isWin = true;
+    } else if (s1.text === s2.text || s2.text === s3.text || s1.text === s3.text) {
+        // Match 2 Combo
+        baseWin = 15;
+        isWin = true;
     }
 
-    balanceDisplay.innerText = balance;
-    spinBtn.disabled = false;
+    if (isWin) {
+        // Apply JILI Multiplier mechanics
+        const activeMultiplier = multipliers[currentMultiplierIndex];
+        const totalPayout = baseWin * activeMultiplier;
+        balance += totalPayout;
+        balanceDisplay.innerText = balance;
+
+        winSound.currentTime = 0;
+        winSound.play().catch(()=>{});
+
+        msgDisplay.innerHTML = `🎉 WIN! Base ${baseWin} x${activeMultiplier} = <span style="color:gold;">${totalPayout} Credits</span>!`;
+        msgDisplay.className = "message win-message";
+
+        // Up the multiplier index step for cascading win combo
+        if (currentMultiplierIndex < 3) {
+            currentMultiplierIndex++;
+        }
+        updateMultiplierUI();
+
+        // Trigger Cascading Drop Free Spin after 1.5 seconds!
+        setTimeout(() => {
+            runReelAnimation();
+        }, 1600);
+
+    } else {
+        // No match resets everything
+        msgDisplay.className = "message";
+        msgDisplay.innerText = "No match. Better luck next spin!";
+        currentMultiplierIndex = 0;
+        updateMultiplierUI();
+        spinBtn.disabled = false;
+    }
 }
 </script>
-
 </body>
 </html>
