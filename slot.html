@@ -12,265 +12,296 @@
     }
     body {
         background: #060d1a;
-        background: radial-gradient(circle, #0e1e38 0%, #03070f 100%);
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background: radial-gradient(circle at center, #112240 0%, #03070f 100%);
+        font-family: 'Arial Black', Gadget, sans-serif;
         color: #fff;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
         height: 100vh;
+        height: -webkit-fill-available;
         overflow: hidden;
         user-select: none;
     }
 
-    /* Top Header Bar */
+    /* Wood Top Frame Header */
     header {
         width: 100%;
-        max-width: 450px;
-        padding: 10px 15px;
+        max-width: 430px;
+        background: linear-gradient(180deg, #3a1d11 0%, #1c0d07 100%);
+        border-bottom: 3px solid #ffd700;
+        padding: 8px 12px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.8);
         z-index: 10;
     }
-    .jili-badge {
-        background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+    .jili-tag {
+        background: linear-gradient(180deg, #fff275 0%, #b8860b 100%);
         color: #000;
-        font-weight: bold;
         font-size: 11px;
-        padding: 2px 6px;
-        border-radius: 3px;
-        box-shadow: 0 0 5px rgba(255,215,0,0.5);
-    }
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .user-tag {
-        font-size: 12px;
-        color: #aaa;
-    }
-    .logout-btn {
-        background: #cc0000;
-        color: white;
-        border: none;
+        font-weight: 900;
         padding: 3px 8px;
         border-radius: 4px;
+        box-shadow: 0 0 5px #ffd700;
+    }
+    .user-info-area {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .user-name-label {
         font-size: 11px;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+    }
+    .logout-action-btn {
+        background: #990000;
+        color: #fff;
+        border: 1px solid #ff4d4d;
+        padding: 2px 6px;
+        font-size: 10px;
+        border-radius: 3px;
         cursor: pointer;
     }
 
-    /* Game Layout Wrapper */
-    .game-container {
+    /* Main Gaming Board Canvas */
+    .viewport-wrapper {
         width: 100%;
-        max-width: 450px;
+        max-width: 430px;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 0 10px;
+        padding: 0 8px;
     }
 
-    /* Mode and Multiplier Banner */
-    .mode-banner {
-        font-size: 22px;
-        font-weight: 900;
-        color: #ff3300;
-        text-shadow: 0 0 10px rgba(255,51,0,0.6);
-        margin-bottom: 5px;
-        letter-spacing: 1px;
-    }
-    .multiplier-bar {
-        background: rgba(13, 3, 3, 0.85);
-        border: 2px solid #6b1414;
-        border-radius: 20px;
-        display: flex;
-        width: 90%;
-        justify-content: space-around;
-        padding: 4px 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .mult-item {
-        font-size: 18px;
-        font-weight: bold;
-        color: #551111;
-    }
-    .mult-item.active {
-        color: #fffb00;
-        text-shadow: 0 0 8px #ff6600;
-        transform: scale(1.15);
-    }
-
-    /* Board Grid Customization */
-    .slot-machine-board {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 2px solid #23395d;
-        border-radius: 8px;
-        padding: 4px;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-    }
-    .grid-5x4 {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 3px;
-    }
-
-    /* Authentic Card Appearance */
-    .card-slot {
-        height: 82px;
-        background: linear-gradient(180deg, #fbfbfb 0%, #d9e2ec 100%);
-        border-radius: 4px;
+    /* Super Ace Multiplier Frame */
+    .status-and-multipliers {
+        width: 95%;
+        background: #120202;
+        border: 2px solid #520b0b;
+        border-radius: 12px;
+        padding: 4px 8px;
+        margin-bottom: 8px;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        box-shadow: inset 0 0 10px #000;
+    }
+    .mode-title {
+        font-size: 14px;
+        color: #ffcc00;
+        text-shadow: 0 0 5px #ff3300;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+    .multiplier-grid {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+    }
+    .mult-node {
+        font-size: 18px;
+        font-weight: 900;
+        color: #4a1212;
+        transition: all 0.2s ease;
+    }
+    .mult-node.active {
+        color: #fffb00;
+        text-shadow: 0 0 8px #ff0000, 0 0 12px #ff6600;
+        transform: scale(1.2);
+    }
+
+    /* The Reels Frame */
+    .reels-board-border {
+        width: 100%;
+        background: linear-gradient(180deg, #142233 0%, #09111c 100%);
+        border: 3px solid #2b4766;
+        border-radius: 6px;
+        padding: 4px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.9), inset 0 0 15px rgba(0,0,0,0.8);
+    }
+    .cards-matrix-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+    }
+
+    /* Authentic JILI Card Styling */
+    .card-slot {
+        height: 66px;
+        background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+        border-radius: 4px;
+        display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 900;
-        color: #102a43;
-        box-shadow: inset 0 -3px 0 #bcccdc, 0 2px 4px rgba(0,0,0,0.4);
+        color: #0f172a;
+        box-shadow: inset 0 -3px 0 #94a3b8, 0 3px 5px rgba(0,0,0,0.5);
+        transition: transform 0.1s ease;
     }
-    .card-slot.red-suit { color: #d32f2f; }
-    .card-slot.golden {
-        background: linear-gradient(135deg, #fff9db 0%, #f59f00 100%);
-        box-shadow: 0 0 8px #f59f00;
-        color: #fff;
-        text-shadow: 1px 1px 2px #000;
+    .card-slot.red-suit {
+        color: #dc2626;
     }
-    .card-slot.scatter {
-        background: radial-gradient(circle, #fff3bf 0%, #e67e22 100%);
+    .card-slot.golden-card {
+        background: linear-gradient(135deg, #fff9db 0%, #f5a623 50%, #d48200 100%);
         color: #fff;
-        font-size: 10px;
-        font-weight: bold;
+        text-shadow: 1px 1px 3px #5c3e00;
+        border: 1px solid #fff;
+        box-shadow: 0 0 8px #f5a623;
+    }
+    .card-slot.scatter-card {
+        background: radial-gradient(circle, #ffe066 0%, #e67e22 100%);
+        font-size: 9px;
+        color: #fff;
         text-shadow: 1px 1px 2px #000;
         border: 2px solid #f1c40f;
     }
-    .card-slot.joker {
-        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-        color: #4a00e0;
-        font-size: 12px;
+    .card-slot.joker-card {
+        background: linear-gradient(135deg, #b4f8c8 0%, #4f83cc 100%);
+        font-size: 11px;
+        color: #fff;
+        text-shadow: 1px 1px 2px #000;
     }
 
-    /* Bottom Control Dashboard */
-    .control-dashboard {
+    .win-payout-ticker {
+        font-size: 16px;
+        color: #2ecc71;
+        text-shadow: 0 0 8px rgba(46,204,113,0.5);
+        margin-top: 6px;
+        min-height: 20px;
+        font-weight: bold;
+    }
+
+    /* Bottom Control Dashboard Console */
+    .bottom-control-console {
         width: 100%;
-        max-width: 450px;
-        background: #09111e;
-        border-top: 2px solid #1c2d42;
-        padding: 10px 15px;
+        max-width: 430px;
+        background: linear-gradient(180deg, #101726 0%, #070b12 100%);
+        border-top: 3px solid #1f2d44;
+        padding: 10px 14px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.8);
     }
-    .dash-left, .dash-right {
+    .console-pane {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        justify-content: center;
     }
-    .info-label {
-        font-size: 10px;
-        color: #627d98;
+    .console-label {
+        font-size: 9px;
+        color: #64748b;
         text-transform: uppercase;
+        font-family: Arial, sans-serif;
+        margin-bottom: 2px;
     }
-    .info-value {
+    .console-value {
         font-size: 15px;
         color: #fadb14;
         font-weight: bold;
     }
-    .deposit-btn {
-        background: #27ae60;
-        color: white;
+    .deposit-action-trigger {
+        background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+        color: #fff;
         border: none;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: bold;
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 10px;
         cursor: pointer;
+        font-weight: bold;
+        margin-top: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
-    /* Center Main Spin Button */
-    .spin-container {
-        position: relative;
-    }
-    .jili-spin-btn {
-        width: 65px;
-        height: 65px;
+    /* Authentic Round Spin Dial Button */
+    .spin-dial-outer {
+        background: radial-gradient(circle, #2c3e50 0%, #0f172a 100%);
+        padding: 4px;
         border-radius: 50%;
-        background: radial-gradient(circle, #ffe066 0%, #f59f00 100%);
-        border: 3px solid #fff;
-        color: #5c3e00;
+        border: 2px solid #334155;
+    }
+    .spin-dial-button {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffe066 0%, #d48200 80%, #a15c00 100%);
+        border: 2px solid #fff;
+        color: #3d2400;
+        font-size: 15px;
         font-weight: 900;
-        font-size: 14px;
         cursor: pointer;
-        box-shadow: 0 0 15px rgba(245,159,0,0.6);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-    .jili-spin-btn:disabled {
-        background: #243b53;
-        color: #486581;
-        border-color: #334e68;
+    .spin-dial-button:disabled {
+        background: radial-gradient(circle, #475569 0%, #1e293b 100%);
+        color: #64748b;
+        border-color: #475569;
         box-shadow: none;
-    }
-    .win-ticker {
-        text-align: center;
-        color: #48bb78;
-        font-weight: bold;
-        font-size: 14px;
-        margin: 5px 0;
-        min-height: 18px;
     }
 </style>
 </head>
 <body>
 
+<!-- Audio Context Tags -->
+<audio id="sound-spin" src="https://actions.google.com/sounds/v1/science_fiction/matrix_travel.ogg" preload="auto"></audio>
+<audio id="sound-win" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+<audio id="sound-deposit" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
 <header>
-    <div class="jili-badge">JILI</div>
-    <div class="header-right">
-        <span class="user-tag" id="user-welcome">👤 Guest</span>
-        <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+    <div class="jili-tag">JILI</div>
+    <div class="user-info-area">
+        <span class="user-name-label" id="user-welcome">👤 Guest</span>
+        <button class="logout-action-btn" onclick="handleLogout()">Logout</button>
     </div>
 </header>
 
-<div class="game-container">
-    <div class="mode-banner" id="game-mode">MAIN GAME</div>
-
-    <div class="multiplier-bar">
-        <div class="mult-item active" id="x_0">x1</div>
-        <div class="mult-item" id="x_1">x2</div>
-        <div class="mult-item" id="x_2">x3</div>
-        <div class="mult-item" id="x_3">x5</div>
+<div class="viewport-wrapper">
+    <div class="status-and-multipliers">
+        <div class="mode-title" id="game-mode">MAIN GAME</div>
+        <div class="multiplier-grid">
+            <div class="mult-node active" id="m_0">×1</div>
+            <div class="mult-node" id="m_1">×2</div>
+            <div class="mult-node" id="m_2">×3</div>
+            <div class="mult-node" id="m_3">×5</div>
+        </div>
     </div>
 
-    <div class="slot-machine-board">
-        <div class="grid-5x4" id="board-matrix"></div>
+    <div class="reels-board-border">
+        <div class="cards-matrix-grid" id="board-matrix"></div>
     </div>
 
-    <div class="win-ticker" id="win-status"></div>
+    <div class="win-payout-ticker" id="win-status"></div>
 </div>
 
-<div class="control-dashboard">
-    <div class="dash-left">
-        <span class="info-label">Bet Setup</span>
-        <span class="info-value">500.00</span>
+<div class="bottom-control-console">
+    <div class="console-pane">
+        <span class="console-label">Bet</span>
+        <span class="console-value" style="color: #fff;">500</span>
     </div>
-    
-    <div class="spin-container">
-        <button class="jili-spin-btn" id="spin-btn" onclick="triggerMainSpin()">JILI</button>
+
+    <div class="spin-dial-outer">
+        <button class="spin-dial-button" id="spin-btn" onclick="triggerMainSpin()">JILI</button>
     </div>
-    
-    <div class="dash-right" style="text-align: right; align-items: flex-end;">
-        <span class="info-label">Balance Credits</span>
-        <span class="info-value" id="balance-display">0.00</span>
-        <button class="deposit-btn" onclick="openDepositWindow()">💸 Deposit</button>
+
+    <div class="console-pane" style="text-align: right; align-items: flex-end;">
+        <span class="console-label">Balance</span>
+        <span class="console-value" id="balance-display">0.00</span>
+        <button class="deposit-action-trigger" onclick="openDepositWindow()">💸 Deposit</button>
     </div>
 </div>
 
 <script>
-    const symbols = ['J', 'Q', 'K', 'A', '♠️', '♥️', '♦️', '♣️'];
+    const symbolsArr = ['J', 'Q', 'K', 'A', '♠️', '♥️', '♦️', '♣️'];
     const betCost = 500;
     
     let username = localStorage.getItem('currentUser') || 'Guest';
@@ -283,6 +314,14 @@
     const normalMultiplierMap = [1, 2, 3, 5];
     const freeMultiplierMap = [2, 4, 6, 10];
     let boardGridArray = Array(20).fill(null).map(() => ({ text: 'A', isGold: false, isJoker: false, isScatter: false }));
+
+    function playAudio(elementId) {
+        const aud = document.getElementById(elementId);
+        if(aud) {
+            aud.currentTime = 0;
+            aud.play().catch(() => {});
+        }
+    }
 
     function syncAccountData() {
         document.getElementById('user-welcome').innerText = `👤 ${username}`;
@@ -309,30 +348,28 @@
     }
 
     function openDepositWindow() {
-        let amount = prompt("Enter amount to deposit into PinoyJackpot:", "1000");
+        playAudio('sound-deposit');
+        let amount = prompt("Enter amount to deposit into PinoyJackpot:", "5000");
         let parsed = parseInt(amount);
         if(parsed > 0) {
             balance += parsed;
             saveBalance();
-            alert(`Successfully added ${parsed} credits to your account!`);
-        } else {
-            alert("Invalid deposit amount.");
         }
     }
 
     function updateMultiplierDisplay() {
         const referenceScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
         for(let i=0; i<4; i++) {
-            const el = document.getElementById(`x_${i}`);
-            el.innerText = 'x' + referenceScale[i];
-            el.className = (comboMultiplierStep === i) ? 'mult-item active' : 'mult-item';
+            const el = document.getElementById(`m_${i}`);
+            el.innerText = '×' + referenceScale[i];
+            el.className = (comboMultiplierStep === i) ? 'mult-node active' : 'mult-node';
         }
     }
 
     function triggerMainSpin() {
         if(!isFreeSpin && comboMultiplierStep === 0) {
             if(balance < betCost) { 
-                alert("Insufficient Credits! Please click the Deposit button to add funds."); 
+                alert("Insufficient Credits! Please deposit funds."); 
                 return; 
             }
             balance -= betCost;
@@ -340,6 +377,7 @@
         }
         document.getElementById('spin-btn').disabled = true;
         updateMultiplierDisplay();
+        playAudio('sound-spin');
         runShuffleAnimation();
     }
 
@@ -348,31 +386,31 @@
         const speedLoop = setInterval(() => {
             for(let i=0; i<20; i++) {
                 if(boardGridArray[i]?.isJoker) continue;
-                const tempSym = symbols[Math.floor(Math.random() * symbols.length)];
+                const tempSym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
                 const el = document.getElementById(`tile_${i}`);
                 el.className = 'card-slot';
                 el.innerText = tempSym;
                 if(tempSym === '♥️' || tempSym === '♦️') el.classList.add('red-suit');
             }
             shuffles++;
-            if(shuffles > 10) {
+            if(shuffles > 12) {
                 clearInterval(speedLoop);
                 processWaysToWinLogic();
             }
-        }, 65);
+        }, 60);
     }
 
     function processWaysToWinLogic() {
         let scatterCounter = 0;
         for(let i=0; i<20; i++) {
             if(comboMultiplierStep === 0 && !isFreeSpin) {
-                let sym = symbols[Math.floor(Math.random() * symbols.length)];
-                let isScat = Math.random() < 0.05;
-                let isG = !isScat && Math.random() < 0.25 && ['J','Q','K','A'].includes(sym);
+                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
+                let isScat = Math.random() < 0.04;
+                let isG = !isScat && Math.random() < 0.22 && ['J','Q','K','A'].includes(sym);
                 if(isScat) scatterCounter++;
                 boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: isScat };
             } else if (!boardGridArray[i].isJoker) {
-                let sym = symbols[Math.floor(Math.random() * symbols.length)];
+                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
                 let isG = Math.random() < 0.15 && ['J','Q','K','A'].includes(sym);
                 boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: false };
             }
@@ -384,13 +422,13 @@
             tile.className = 'card-slot';
             tile.innerText = data.text;
             if(data.text === '♥️' || data.text === '♦️') tile.classList.add('red-suit');
-            if(data.isGold) tile.classList.add('golden');
+            if(data.isGold) tile.classList.add('golden-card');
             if(data.isScatter) {
-                tile.className = 'card-slot scatter';
-                tile.innerHTML = '🪙 SCATTER';
+                tile.className = 'card-slot scatter-card';
+                tile.innerHTML = '🪙<br>SCATTER';
             }
             if(data.isJoker) {
-                tile.className = 'card-slot joker';
+                tile.className = 'card-slot joker-card';
                 tile.innerText = '🃏 JOKER';
             }
         }
@@ -421,9 +459,9 @@
                         if(col5Matches.length > 0) {
                             pathCount *= col5Matches.length;
                             col5Matches.forEach(c => elementsToClear.add(c.index));
-                            totalWinCredits += (250 * pathCount);
-                        } else { totalWinCredits += (120 * pathCount); }
-                    } else { totalWinCredits += (50 * pathCount); }
+                            totalWinCredits += (200 * pathCount);
+                        } else { totalWinCredits += (100 * pathCount); }
+                    } else { totalWinCredits += (40 * pathCount); }
                 }
             }
         });
@@ -434,6 +472,7 @@
         }
 
         if(totalWinCredits > 0) {
+            playAudio('sound-win');
             const targetScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
             let finalPayoutCalculated = totalWinCredits * targetScale[comboMultiplierStep];
             balance += finalPayoutCalculated;
@@ -451,7 +490,7 @@
 
             if(comboMultiplierStep < 3) comboMultiplierStep++;
             updateMultiplierDisplay();
-            setTimeout(() => { runShuffleAnimation(); }, 1300);
+            setTimeout(() => { runShuffleAnimation(); }, 1200);
         } else {
             document.getElementById('win-status').innerText = '';
             if(isFreeSpin && freeSpinsRemaining > 0) {
@@ -484,7 +523,6 @@
 
     function handleLogout() {
         localStorage.removeItem('currentUser');
-        alert("You have been logged out successfully!");
         window.location.href = "index.html";
     }
 </script>
