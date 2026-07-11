@@ -273,6 +273,19 @@ footer{
 <script>
 let isSignUpMode = false;
 
+// Checks if someone is logged in when the page loads
+function checkLoginStatus() {
+    const loggedInUser = localStorage.getItem('currentUser');
+    if (loggedInUser) {
+        document.getElementById('user-display').innerText = `👤 ${loggedInUser}`;
+        document.getElementById('user-display').style.display = 'inline';
+        document.getElementById('auth-nav-btn').style.display = 'none';
+    }
+}
+
+// Automatically runs the check every time the site opens
+window.onload = checkLoginStatus;
+
 function openAuthModal() {
     document.getElementById('auth-modal').style.display = 'flex';
 }
@@ -309,6 +322,10 @@ function handleAuthSubmit() {
         const storedPassword = localStorage.getItem(`user_${user}`);
         if (storedPassword && storedPassword === pass) {
             alert(`Welcome back, ${user}!`);
+            
+            // Saves the user session to browser memory
+            localStorage.setItem('currentUser', user); 
+            
             document.getElementById('user-display').innerText = `👤 ${user}`;
             document.getElementById('user-display').style.display = 'inline';
             document.getElementById('auth-nav-btn').style.display = 'none';
