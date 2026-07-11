@@ -218,9 +218,11 @@
     <div class="logo-text">PinoyJackpot</div>
     <div class="header-right">
         <span class="user-tag" id="user-welcome">👤 Guest</span>
+        <button onclick="handleLogout()" style="background: #cc0000; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: Arial, sans-serif; font-weight: bold; margin-left: 5px;">🚪 Logout</button>
         <a href="index.html" class="exit-btn">🏠 Exit</a>
     </div>
 </header>
+
 
 <div class="game-container">
     <div class="mode-banner" id="game-mode">MAIN GAME</div>
@@ -467,6 +469,15 @@
         updateMultiplierDisplay();
         setTimeout(() => { triggerMainSpin(); }, 1200);
     }
+
+function handleLogout() {
+    // Clear the active session tracking
+    localStorage.removeItem('currentUser');
+    alert("You have been logged out successfully!");
+    // Redirect back to the homepage/login screen
+    window.location.href = "index.html";
+}
+
 </script>
 </body>
 </html>
