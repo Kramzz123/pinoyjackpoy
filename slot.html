@@ -604,5 +604,5 @@
             document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
             document.getElementById('spin-btn').disabled = false;
             }, (error) => {
-        console.error("Firestore balance stream failed:", error);
+                console.error("Firestore balance stream failed:", error);
     });
