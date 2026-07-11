@@ -546,14 +546,17 @@
 <script>
     // --- FIREBASE INITIALIZATION ---
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'pinoyjackpot-default';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-        apiKey: "demo-key-placeholder",
-        authDomain: "demo.firebaseapp.com",
-        projectId: "demo",
-        storageBucket: "demo.appspot.com",
-        messagingSenderId: "123",
-        appId: "1:123:web:123"
-    };
+    const firebaseConfig = {
+  apiKey: "AIzaSyBpU119Hs4XUySvkwhD0bs0IgPvC2Z5P3c",
+  authDomain: "pinoyjackpot-3bb5f.firebaseapp.com",
+  projectId: "pinoyjackpot-3bb5f",
+  storageBucket: "pinoyjackpot-3bb5f.firebasestorage.app",
+  messagingSenderId: "78201419930",
+  appId: "1:78201419930:web:6e595e54c22a72bcb00723",
+  measurementId: "G-WS6VDTS601"
+};
+
+
 
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
