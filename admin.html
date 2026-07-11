@@ -1,0 +1,925 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Super Ace - JILI Gaming</title>
+<!-- Firebase SDKs Compat -->
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        background: #060d1a;
+        background: radial-gradient(circle at center, #112240 0%, #03070f 100%);
+        font-family: 'Arial Black', Gadget, sans-serif;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100vh;
+        height: -webkit-fill-available;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    /* Wood Top Frame Header */
+    header {
+        width: 100%;
+        max-width: 430px;
+        background: linear-gradient(180deg, #3a1d11 0%, #1c0d07 100%);
+        border-bottom: 3px solid #ffd700;
+        padding: 8px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+        z-index: 10;
+    }
+    .jili-tag {
+        background: linear-gradient(180deg, #fff275 0%, #b8860b 100%);
+        color: #000;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 3px 8px;
+        border-radius: 4px;
+        box-shadow: 0 0 5px #ffd700;
+    }
+    .user-info-area {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .user-name-label {
+        font-size: 11px;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+    }
+    .logout-action-btn {
+        background: #990000;
+        color: #fff;
+        border: 1px solid #ff4d4d;
+        padding: 2px 6px;
+        font-size: 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    /* Main Gaming Board Canvas */
+    .viewport-wrapper {
+        width: 100%;
+        max-width: 430px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 8px;
+    }
+
+    /* Super Ace Multiplier Frame */
+    .status-and-multipliers {
+        width: 95%;
+        background: #120202;
+        border: 2px solid #520b0b;
+        border-radius: 12px;
+        padding: 4px 8px;
+        margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: inset 0 0 10px #000;
+    }
+    .mode-title {
+        font-size: 14px;
+        color: #ffcc00;
+        text-shadow: 0 0 5px #ff3300;
+        letter-spacing: 1px;
+        margin-bottom: 2px;
+    }
+    .multiplier-grid {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+    }
+    .mult-node {
+        font-size: 18px;
+        font-weight: 900;
+        color: #4a1212;
+        transition: all 0.2s ease;
+    }
+    .mult-node.active {
+        color: #fffb00;
+        text-shadow: 0 0 8px #ff0000, 0 0 12px #ff6600;
+        transform: scale(1.2);
+    }
+
+    /* The Reels Frame */
+    .reels-board-border {
+        width: 100%;
+        background: linear-gradient(180deg, #142233 0%, #09111c 100%);
+        border: 3px solid #2b4766;
+        border-radius: 6px;
+        padding: 4px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.9), inset 0 0 15px rgba(0,0,0,0.8);
+    }
+    .cards-matrix-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+    }
+
+    /* Authentic JILI Card Styling */
+    .card-slot {
+        height: 66px;
+        background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        font-weight: 900;
+        color: #0f172a;
+        box-shadow: inset 0 -3px 0 #94a3b8, 0 3px 5px rgba(0,0,0,0.5);
+        transition: transform 0.1s ease;
+    }
+    .card-slot.red-suit {
+        color: #dc2626;
+    }
+    .card-slot.golden-card {
+        background: linear-gradient(135deg, #fff9db 0%, #f5a623 50%, #d48200 100%);
+        color: #fff;
+        text-shadow: 1px 1px 3px #5c3e00;
+        border: 1px solid #fff;
+        box-shadow: 0 0 8px #f5a623;
+    }
+    .card-slot.scatter-card {
+        background: radial-gradient(circle, #ffe066 0%, #e67e22 100%);
+        font-size: 9px;
+        color: #fff;
+        text-shadow: 1px 1px 2px #000;
+        border: 2px solid #f1c40f;
+    }
+    .card-slot.joker-card {
+        background: linear-gradient(135deg, #b4f8c8 0%, #4f83cc 100%);
+        font-size: 11px;
+        color: #fff;
+        text-shadow: 1px 1px 2px #000;
+    }
+
+    .win-payout-ticker {
+        font-size: 16px;
+        color: #2ecc71;
+        text-shadow: 0 0 8px rgba(46,204,113,0.5);
+        margin-top: 6px;
+        min-height: 20px;
+        font-weight: bold;
+    }
+
+    /* Bottom Control Dashboard Console */
+    .bottom-control-console {
+        width: 100%;
+        max-width: 430px;
+        background: linear-gradient(180deg, #101726 0%, #070b12 100%);
+        border-top: 3px solid #1f2d44;
+        padding: 10px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.8);
+    }
+    .console-pane {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .console-label {
+        font-size: 9px;
+        color: #64748b;
+        text-transform: uppercase;
+        font-family: Arial, sans-serif;
+        margin-bottom: 2px;
+    }
+    
+    /* Interactive Bet Buttons Container */
+    .bet-adjuster-box {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 2px;
+    }
+    .bet-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+        border: 1px solid #fff;
+        color: #000;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .bet-btn:active {
+        transform: scale(0.9);
+    }
+    .bet-btn:disabled {
+        background: #334155;
+        border-color: #475569;
+        color: #64748b;
+        cursor: not-allowed;
+    }
+    
+    .console-value {
+        font-size: 15px;
+        color: #fadb14;
+        font-weight: bold;
+        min-width: 38px;
+        text-align: center;
+    }
+    .cashier-actions {
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+    }
+    .deposit-action-trigger {
+        background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+        color: #fff;
+        border: none;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .withdraw-action-trigger {
+        background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
+        color: #fff;
+        border: none;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* Authentic Round Spin Dial Button */
+    .spin-dial-outer {
+        background: radial-gradient(circle, #2c3e50 0%, #0f172a 100%);
+        padding: 4px;
+        border-radius: 50%;
+        border: 2px solid #334155;
+    }
+    .spin-dial-button {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffe066 0%, #d48200 80%, #a15c00 100%);
+        border: 2px solid #fff;
+        color: #3d2400;
+        font-size: 15px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .spin-dial-button:disabled {
+        background: radial-gradient(circle, #475569 0%, #1e293b 100%);
+        color: #64748b;
+        border-color: #475569;
+        box-shadow: none;
+    }
+
+    /* Cashier QR Modal Overlays */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+    .modal-box {
+        width: 90%;
+        max-width: 380px;
+        background: #111a2e;
+        border: 2px solid #fadb14;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .modal-title {
+        font-size: 18px;
+        color: #fadb14;
+        margin-bottom: 12px;
+        font-family: 'Arial Black', Gadget, sans-serif;
+    }
+    .qr-container {
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .qr-image {
+        width: 160px;
+        height: 160px;
+        object-fit: contain;
+    }
+    .deposit-instructions {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    .amount-input-group {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .amount-input {
+        width: 100%;
+        padding: 10px;
+        background: #080d1a;
+        border: 1px solid #1f2d44;
+        border-radius: 8px;
+        color: #fadb14;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        outline: none;
+    }
+    .amount-input:focus {
+        border-color: #fadb14;
+    }
+    .quick-amounts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .quick-btn {
+        background: #1e293b;
+        color: #fff;
+        border: 1px solid #334155;
+        padding: 8px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .quick-btn:hover {
+        background: #fadb14;
+        color: #000;
+        border-color: #fadb14;
+    }
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+    .action-btn {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+    }
+    .action-cancel {
+        background: #334155;
+        color: #fff;
+    }
+    .action-submit {
+        background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(46,204,113,0.4);
+    }
+</style>
+</head>
+<body>
+
+<!-- Audio Context Tags -->
+<audio id="sound-spin" src="https://actions.google.com/sounds/v1/science_fiction/matrix_travel.ogg" preload="auto"></audio>
+<audio id="sound-win" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+<audio id="sound-deposit" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+<header>
+    <div class="jili-tag">JILI</div>
+    <div class="user-info-area">
+        <span class="user-name-label" id="user-welcome">👤 Loading...</span>
+        <button class="logout-action-btn" onclick="handleLogout()">Logout</button>
+    </div>
+</header>
+
+<div class="viewport-wrapper">
+    <div class="status-and-multipliers">
+        <div class="mode-title" id="game-mode">MAIN GAME</div>
+        <div class="multiplier-grid">
+            <div class="mult-node active" id="m_0">×1</div>
+            <div class="mult-node" id="m_1">×2</div>
+            <div class="mult-node" id="m_2">×3</div>
+            <div class="mult-node" id="m_3">×5</div>
+        </div>
+    </div>
+
+    <div class="reels-board-border">
+        <div class="cards-matrix-grid" id="board-matrix"></div>
+    </div>
+
+    <div class="win-payout-ticker" id="win-status"></div>
+</div>
+
+<div class="bottom-control-console">
+    <div class="console-pane">
+        <span class="console-label">Bet</span>
+        <div class="bet-adjuster-box">
+            <button class="bet-btn" id="bet-minus-btn" onclick="adjustBet(-1)">-</button>
+            <span class="console-value" id="bet-display" style="color: #fff;">10</span>
+            <button class="bet-btn" id="bet-plus-btn" onclick="adjustBet(1)">+</button>
+        </div>
+    </div>
+
+    <div class="spin-dial-outer">
+        <button class="spin-dial-button" id="spin-btn" onclick="triggerMainSpin()" disabled>JILI</button>
+    </div>
+
+    <div class="console-pane" style="text-align: right; align-items: flex-end;">
+        <span class="console-label">Balance</span>
+        <span class="console-value" id="balance-display">0.00</span>
+        <div class="cashier-actions">
+            <button class="deposit-action-trigger" onclick="openDepositModal()">💸 Deposit</button>
+            <button class="withdraw-action-trigger" onclick="openWithdrawModal()">🏦 Cashout</button>
+        </div>
+    </div>
+</div>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-overlay" id="deposit-modal">
+    <div class="modal-box">
+        <div class="modal-title">💸 DEPOSIT REQUEST</div>
+        <div class="qr-container">
+            <svg class="qr-image" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="100" height="100" fill="white" />
+                <rect x="10" y="10" width="25" height="25" fill="black" />
+                <rect x="13" y="13" width="19" height="19" fill="white" />
+                <rect x="16" y="16" width="13" height="13" fill="black" />
+                <rect x="65" y="10" width="25" height="25" fill="black" />
+                <rect x="68" y="13" width="19" height="19" fill="white" />
+                <rect x="71" y="16" width="13" height="13" fill="black" />
+                <rect x="10" y="65" width="25" height="25" fill="black" />
+                <rect x="13" y="68" width="19" height="19" fill="white" />
+                <rect x="16" y="71" width="13" height="13" fill="black" />
+                <rect x="42" y="15" width="5" height="10" fill="black"/>
+                <rect x="50" y="25" width="8" height="5" fill="black"/>
+                <rect x="45" y="40" width="10" height="10" fill="black"/>
+                <rect x="70" y="45" width="15" height="8" fill="black"/>
+                <rect x="44" y="44" width="12" height="12" fill="#0055d4" />
+                <text x="50" y="52" font-size="6" font-family="Arial" fill="white" text-anchor="middle" font-weight="bold">QR</text>
+            </svg>
+        </div>
+        <p class="deposit-instructions">Scan GCash QR to Pay. Enter Amount and Submit.</p>
+        <div class="amount-input-group">
+            <input type="number" id="deposit-amount-input" class="amount-input" value="1000" min="10">
+        </div>
+        <div class="quick-amounts">
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 100)">₱100</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 500)">₱500</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 1000)">₱1,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount('deposit', 5000)">₱5,000</button>
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn action-cancel" onclick="closeDepositModal()">Cancel</button>
+            <button class="action-btn action-submit" onclick="submitDeposit()">I Have Paid</button>
+        </div>
+    </div>
+</div>
+
+<!-- WITHDRAW MODAL -->
+<div class="modal-overlay" id="withdraw-modal">
+    <div class="modal-box">
+        <div class="modal-title" style="color: #e67e22;">🏦 GCASH CASHOUT</div>
+        <p class="deposit-instructions" style="margin-top: 10px;">Enter the amount and GCash Details to withdraw.</p>
+        <div class="amount-input-group">
+            <input type="number" id="withdraw-amount-input" class="amount-input" value="500" min="50" style="color: #e67e22;">
+        </div>
+        <div class="quick-amounts">
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 100)">₱100</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 500)">₱500</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 1000)">₱1,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount('withdraw', 5000)">₱5,000</button>
+        </div>
+        <div class="amount-input-group">
+            <input type="text" id="withdraw-account-input" class="amount-input" placeholder="GCash Name & Number" style="font-size: 14px; margin-top: 5px;">
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn action-cancel" onclick="closeWithdrawModal()">Cancel</button>
+            <button class="action-btn action-submit" style="background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);" onclick="submitWithdraw()">Submit Cashout</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- FIREBASE INITIALIZATION ---
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'pinoyjackpot-default';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        apiKey: "demo-key-placeholder",
+        authDomain: "demo.firebaseapp.com",
+        projectId: "demo",
+        storageBucket: "demo.appspot.com",
+        messagingSenderId: "123",
+        appId: "1:123:web:123"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const symbolsArr = ['J', 'Q', 'K', 'A', '♠️', '♥️', '♦️', '♣️'];
+    const betLevels = [1, 2, 3, 5, 10, 20, 30, 40, 50, 60, 100, 200, 300, 400, 500, 1000, 2000, 5000];
+    let currentBetIndex = 4; // default bet is 10
+    let betCost = betLevels[currentBetIndex];
+    
+    let username = localStorage.getItem('currentUser') || 'Guest';
+    let balance = 0;
+    let authUser = null;
+    
+    let isFreeSpin = false;
+    let freeSpinsRemaining = 0;
+    let comboMultiplierStep = 0;
+    
+    const normalMultiplierMap = [1, 2, 3, 5];
+    const freeMultiplierMap = [2, 4, 6, 10];
+    let boardGridArray = Array(20).fill(null).map(() => ({ text: 'A', isGold: false, isJoker: false, isScatter: false }));
+
+    function playAudio(elementId) {
+        const aud = document.getElementById(elementId);
+        if(aud) {
+            aud.currentTime = 0;
+            aud.play().catch(() => {});
+        }
+    }
+
+    // --- REALTIME FIRESTORE WALLET SYNC ---
+    async function startRealtimeSync() {
+        if (!authUser) return;
+
+        // Path validation per Rule 1: /artifacts/{appId}/public/data/wallets
+        const walletRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('wallets').doc(username);
+
+        // Fetch or create player's wallet
+        walletRef.onSnapshot((doc) => {
+            if (doc.exists) {
+                balance = doc.data().balance || 0;
+            } else {
+                walletRef.set({ balance: 0, username: username });
+                balance = 0;
+            }
+            document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
+            document.getElementById('spin-btn').disabled = false;
+        }, (error) => {
+            console.error("Firestore balance stream failed:", error);
+        });
+    }
+
+    async function initAuthAndGame() {
+        // Authenticate first (Rule 3)
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await auth.signInWithCustomToken(__initial_auth_token);
+            } else {
+                await auth.signInAnonymously();
+            }
+        };
+
+        await initAuth();
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                authUser = user;
+                document.getElementById('user-welcome').innerText = `👤 ${username}`;
+                startRealtimeSync();
+            }
+        });
+    }
+
+    // Init App
+    window.onload = function() {
+        initAuthAndGame();
+        createEmptySlots();
+    };
+
+    function createEmptySlots() {
+        const board = document.getElementById('board-matrix');
+        board.innerHTML = '';
+        for(let i=0; i<20; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'card-slot';
+            slot.id = `tile_${i}`;
+            slot.innerText = 'A';
+            board.appendChild(slot);
+        }
+    }
+
+    async function updateBalanceInFirestore(newBalance) {
+        if (!authUser) return;
+        const walletRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('wallets').doc(username);
+        await walletRef.update({ balance: newBalance });
+    }
+
+    /* Bet Adjuster */
+    function adjustBet(direction) {
+        if (document.getElementById('spin-btn').disabled || isFreeSpin) return;
+        playAudio('sound-deposit');
+        let newIndex = currentBetIndex + direction;
+        if (newIndex >= 0 && newIndex < betLevels.length) {
+            currentBetIndex = newIndex;
+            betCost = betLevels[currentBetIndex];
+            document.getElementById('bet-display').innerText = betCost;
+        }
+    }
+
+    function toggleBetButtons(state) {
+        document.getElementById('bet-minus-btn').disabled = !state;
+        document.getElementById('bet-plus-btn').disabled = !state;
+    }
+
+    /* Cashier Modals */
+    function openDepositModal() {
+        playAudio('sound-deposit');
+        document.getElementById('deposit-modal').style.display = 'flex';
+    }
+    function closeDepositModal() {
+        document.getElementById('deposit-modal').style.display = 'none';
+    }
+    function openWithdrawModal() {
+        playAudio('sound-deposit');
+        document.getElementById('withdraw-modal').style.display = 'flex';
+    }
+    function closeWithdrawModal() {
+        document.getElementById('withdraw-modal').style.display = 'none';
+    }
+    function selectQuickAmount(type, amount) {
+        document.getElementById(`${type}-amount-input`).value = amount;
+    }
+
+    async function submitDeposit() {
+        const amountInput = document.getElementById('deposit-amount-input');
+        const parsed = parseInt(amountInput.value);
+        if(parsed > 0 && authUser) {
+            // Write Deposit request to Firestore (Rule 1)
+            const txRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('transactions');
+            await txRef.add({
+                username: username,
+                type: 'deposit',
+                amount: parsed,
+                status: 'pending',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            closeDepositModal();
+            alert(`✅ Deposit Request of ₱${parsed.toLocaleString()} submitted! Please wait for the admin to confirm your receipt.`);
+        } else {
+            alert("Please enter a valid deposit amount.");
+        }
+    }
+
+    async function submitWithdraw() {
+        const amountInput = document.getElementById('withdraw-amount-input');
+        const accountInput = document.getElementById('withdraw-account-input');
+        const parsed = parseInt(amountInput.value);
+        const details = accountInput.value.trim();
+
+        if (parsed > balance) {
+            alert("Insufficient balance to cash out!");
+            return;
+        }
+        if (!details) {
+            alert("Please enter your GCash Name and Account Number.");
+            return;
+        }
+
+        if(parsed >= 50 && authUser) {
+            // Subtract balance immediately so they don't double spin
+            const newBal = balance - parsed;
+            await updateBalanceInFirestore(newBal);
+
+            // Write Withdrawal request to Firestore
+            const txRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('transactions');
+            await txRef.add({
+                username: username,
+                type: 'withdraw',
+                amount: parsed,
+                details: details,
+                status: 'pending',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            closeWithdrawModal();
+            alert(`✅ Cashout request of ₱${parsed.toLocaleString()} submitted! Admin will send it to your GCash shortly.`);
+        } else {
+            alert("Minimum cashout is ₱50.");
+        }
+    }
+
+    function updateMultiplierDisplay() {
+        const referenceScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
+        for(let i=0; i<4; i++) {
+            const el = document.getElementById(`m_${i}`);
+            el.innerText = '×' + referenceScale[i];
+            el.className = (comboMultiplierStep === i) ? 'mult-node active' : 'mult-node';
+        }
+    }
+
+    async function triggerMainSpin() {
+        if(!isFreeSpin && comboMultiplierStep === 0) {
+            if(balance < betCost) { 
+                openDepositModal();
+                return; 
+            }
+            const newBal = balance - betCost;
+            await updateBalanceInFirestore(newBal);
+        }
+        document.getElementById('spin-btn').disabled = true;
+        toggleBetButtons(false);
+        updateMultiplierDisplay();
+        playAudio('sound-spin');
+        runShuffleAnimation();
+    }
+
+    function runShuffleAnimation() {
+        let shuffles = 0;
+        const speedLoop = setInterval(() => {
+            for(let i=0; i<20; i++) {
+                if(boardGridArray[i]?.isJoker) continue;
+                const tempSym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
+                const el = document.getElementById(`tile_${i}`);
+                el.className = 'card-slot';
+                el.innerText = tempSym;
+                if(tempSym === '♥️' || tempSym === '♦️') el.classList.add('red-suit');
+            }
+            shuffles++;
+            if(shuffles > 12) {
+                clearInterval(speedLoop);
+                processWaysToWinLogic();
+            }
+        }, 60);
+    }
+
+    async function processWaysToWinLogic() {
+        let scatterCounter = 0;
+        for(let i=0; i<20; i++) {
+            if(comboMultiplierStep === 0 && !isFreeSpin) {
+                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
+                let isScat = Math.random() < 0.04;
+                let isG = !isScat && Math.random() < 0.22 && ['J','Q','K','A'].includes(sym);
+                if(isScat) scatterCounter++;
+                boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: isScat };
+            } else if (!boardGridArray[i].isJoker) {
+                let sym = symbolsArr[Math.floor(Math.random() * symbolsArr.length)];
+                let isG = Math.random() < 0.15 && ['J','Q','K','A'].includes(sym);
+                boardGridArray[i] = { text: sym, isGold: isG, isJoker: false, isScatter: false };
+            }
+        }
+
+        for(let i=0; i<20; i++) {
+            const tile = document.getElementById(`tile_${i}`);
+            const data = boardGridArray[i];
+            tile.className = 'card-slot';
+            tile.innerText = data.text;
+            if(data.text === '♥️' || data.text === '♦️') tile.classList.add('red-suit');
+            if(data.isGold) tile.classList.add('golden-card');
+            if(data.isScatter) {
+                tile.className = 'card-slot scatter-card';
+                tile.innerHTML = '🪙<br>SCATTER';
+            }
+            if(data.isJoker) {
+                tile.className = 'card-slot joker-card';
+                tile.innerText = '🃏 JOKER';
+            }
+        }
+
+        let columns = [[], [], [], [], []];
+        for(let i=0; i<20; i++) { columns[i % 5].push({ index: i, item: boardGridArray[i] }); }
+
+        let totalWinCredits = 0;
+        let elementsToClear = new Set();
+
+        columns[0].forEach(col1 => {
+            let matchSymbol = col1.item.text;
+            if(col1.item.isScatter || col1.item.isJoker) return;
+            let col2Matches = columns[1].filter(c => c.item.text === matchSymbol || c.item.isJoker);
+            if(col2Matches.length > 0) {
+                let col3Matches = columns[2].filter(c => c.item.text === matchSymbol || c.item.isJoker);
+                if(col3Matches.length > 0) {
+                    let pathCount = 1 * col2Matches.length * col3Matches.length;
+                    elementsToClear.add(col1.index);
+                    col2Matches.forEach(c => elementsToClear.add(c.index));
+                    col3Matches.forEach(c => elementsToClear.add(c.index));
+
+                    let col4Matches = columns[3].filter(c => c.item.text === matchSymbol || c.item.isJoker);
+                    if(col4Matches.length > 0) {
+                        pathCount *= col4Matches.length;
+                        col4Matches.forEach(c => elementsToClear.add(c.index));
+                        let col5Matches = columns[4].filter(c => c.item.text === matchSymbol || c.item.isJoker);
+                        if(col5Matches.length > 0) {
+                            pathCount *= col5Matches.length;
+                            col5Matches.forEach(c => elementsToClear.add(c.index));
+                            totalWinCredits += (betCost * 0.4 * pathCount);
+                        } else { totalWinCredits += (betCost * 0.2 * pathCount); }
+                    } else { totalWinCredits += (betCost * 0.08 * pathCount); }
+                }
+            }
+        });
+
+        if(scatterCounter >= 3 && !isFreeSpin) {
+            triggerFreeSpinsBonus();
+            return;
+        }
+
+        if(totalWinCredits > 0) {
+            playAudio('sound-win');
+            const targetScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
+            let finalPayoutCalculated = Math.round(totalWinCredits * targetScale[comboMultiplierStep]);
+            
+            const newBal = balance + finalPayoutCalculated;
+            await updateBalanceInFirestore(newBal);
+
+            document.getElementById('win-status').innerText = `WIN: ${finalPayoutCalculated.toLocaleString()}.00`;
+
+            elementsToClear.forEach(idx => {
+                if(boardGridArray[idx].isGold) {
+                    boardGridArray[idx].isGold = false;
+                    boardGridArray[idx].isJoker = true;
+                } else if (!boardGridArray[idx].isJoker) {
+                    boardGridArray[idx] = { text: '', isGold: false, isJoker: false, isScatter: false };
+                }
+            });
+
+            if(comboMultiplierStep < 3) comboMultiplierStep++;
+            updateMultiplierDisplay();
+            setTimeout(() => { runShuffleAnimation(); }, 1200);
+        } else {
+            document.getElementById('win-status').innerText = '';
+            if(isFreeSpin && freeSpinsRemaining > 0) {
+                freeSpinsRemaining--;
+                document.getElementById('game-mode').innerText = `FREE SPIN ${freeSpinsRemaining}`;
+                if(freeSpinsRemaining === 0) {
+                    isFreeSpin = false;
+                    document.getElementById('game-mode').innerText = "MAIN GAME";
+                    comboMultiplierStep = 0;
+                }
+                setTimeout(() => { triggerMainSpin(); }, 1000);
+            } else {
+                boardGridArray = Array(20).fill(null).map(() => ({ text: 'A', isGold: false, isJoker: false, isScatter: false }));
+                comboMultiplierStep = 0;
+                updateMultiplierDisplay();
+                document.getElementById('spin-btn').disabled = false;
+                toggleBetButtons(true);
+            }
+        }
+    }
+
+    function triggerFreeSpinsBonus() {
+        alert("🎰 BONUS ACCESSED: 10 FREE SPINS GRANTED! 🎰");
+        isFreeSpin = true;
+        freeSpinsRemaining = 10;
+        comboMultiplierStep = 0;
+        document.getElementById('game-mode').innerText = `FREE SPIN ${freeSpinsRemaining}`;
+        updateMultiplierDisplay();
+        setTimeout(() => { triggerMainSpin(); }, 1200);
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('currentUser');
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>
+
+```
