@@ -248,6 +248,125 @@
         border-color: #475569;
         box-shadow: none;
     }
+
+    /* Cashier QR Modal Overlays */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+    .modal-box {
+        width: 90%;
+        max-width: 380px;
+        background: #111a2e;
+        border: 2px solid #fadb14;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .modal-title {
+        font-size: 18px;
+        color: #fadb14;
+        margin-bottom: 12px;
+        font-family: 'Arial Black', Gadget, sans-serif;
+    }
+    .qr-container {
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .qr-image {
+        width: 160px;
+        height: 160px;
+        object-fit: contain;
+    }
+    .deposit-instructions {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+    .amount-input-group {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .amount-input {
+        width: 100%;
+        padding: 10px;
+        background: #080d1a;
+        border: 1px solid #1f2d44;
+        border-radius: 8px;
+        color: #fadb14;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        outline: none;
+    }
+    .amount-input:focus {
+        border-color: #fadb14;
+    }
+    .quick-amounts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .quick-btn {
+        background: #1e293b;
+        color: #fff;
+        border: 1px solid #334155;
+        padding: 8px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .quick-btn:hover {
+        background: #fadb14;
+        color: #000;
+        border-color: #fadb14;
+    }
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+    .action-btn {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+    }
+    .action-cancel {
+        background: #334155;
+        color: #fff;
+    }
+    .action-submit {
+        background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(46,204,113,0.4);
+    }
 </style>
 </head>
 <body>
@@ -296,7 +415,67 @@
     <div class="console-pane" style="text-align: right; align-items: flex-end;">
         <span class="console-label">Balance</span>
         <span class="console-value" id="balance-display">0.00</span>
-        <button class="deposit-action-trigger" onclick="openDepositWindow()">💸 Deposit</button>
+        <button class="deposit-action-trigger" onclick="openDepositModal()">💸 Deposit</button>
+    </div>
+</div>
+
+<!-- CASHIER DEPOSIT MODAL -->
+<div class="modal-overlay" id="deposit-modal">
+    <div class="modal-box">
+        <div class="modal-title">💸 PINOYJACKPOT CASHIER</div>
+        
+        <div class="qr-container">
+            <!-- DEFAULT QR CODE PLACEHOLDER. Replace "src" with your actual GCash/Maya QR URL -->
+            <svg class="qr-image" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer borders -->
+                <rect x="0" y="0" width="100" height="100" fill="white" />
+                <rect x="10" y="10" width="25" height="25" fill="black" />
+                <rect x="13" y="13" width="19" height="19" fill="white" />
+                <rect x="16" y="16" width="13" height="13" fill="black" />
+                
+                <rect x="65" y="10" width="25" height="25" fill="black" />
+                <rect x="68" y="13" width="19" height="19" fill="white" />
+                <rect x="71" y="16" width="13" height="13" fill="black" />
+                
+                <rect x="10" y="65" width="25" height="25" fill="black" />
+                <rect x="13" y="68" width="19" height="19" fill="white" />
+                <rect x="16" y="71" width="13" height="13" fill="black" />
+                
+                <!-- Random QR pixels -->
+                <rect x="42" y="15" width="5" height="10" fill="black"/>
+                <rect x="50" y="25" width="8" height="5" fill="black"/>
+                <rect x="45" y="40" width="10" height="10" fill="black"/>
+                <rect x="15" y="48" width="12" height="6" fill="black"/>
+                <rect x="70" y="45" width="15" height="8" fill="black"/>
+                <rect x="40" y="65" width="8" height="15" fill="black"/>
+                <rect x="55" y="75" width="12" height="12" fill="black"/>
+                <rect x="78" y="68" width="8" height="8" fill="black"/>
+                <!-- Decorative blue brand dot in the middle -->
+                <rect x="44" y="44" width="12" height="12" fill="#0055d4" />
+                <text x="50" y="52" font-size="6" font-family="Arial" fill="white" text-anchor="middle" font-weight="bold">QR</text>
+            </svg>
+        </div>
+
+        <p class="deposit-instructions">
+            Scan the GCash QR code above to pay.<br>
+            Please select or enter your cash-in amount below.
+        </p>
+
+        <div class="amount-input-group">
+            <input type="number" id="deposit-amount-input" class="amount-input" value="1000" min="100">
+        </div>
+
+        <div class="quick-amounts">
+            <button class="quick-btn" onclick="selectQuickAmount(100)">₱100</button>
+            <button class="quick-btn" onclick="selectQuickAmount(500)">₱500</button>
+            <button class="quick-btn" onclick="selectQuickAmount(1000)">₱1,000</button>
+            <button class="quick-btn" onclick="selectQuickAmount(5000)">₱5,000</button>
+        </div>
+
+        <div class="modal-actions">
+            <button class="action-btn action-cancel" onclick="closeDepositModal()">Cancel</button>
+            <button class="action-btn action-submit" onclick="submitDeposit()">I have Paid</button>
+        </div>
     </div>
 </div>
 
@@ -347,13 +526,30 @@
         document.getElementById('balance-display').innerText = balance.toLocaleString() + ".00";
     }
 
-    function openDepositWindow() {
+    /* CASHIER MODAL LOGIC */
+    function openDepositModal() {
         playAudio('sound-deposit');
-        let amount = prompt("Enter amount to deposit into PinoyJackpot:", "5000");
-        let parsed = parseInt(amount);
+        document.getElementById('deposit-modal').style.display = 'flex';
+    }
+
+    function closeDepositModal() {
+        document.getElementById('deposit-modal').style.display = 'none';
+    }
+
+    function selectQuickAmount(amount) {
+        document.getElementById('deposit-amount-input').value = amount;
+    }
+
+    function submitDeposit() {
+        const amountInput = document.getElementById('deposit-amount-input');
+        const parsed = parseInt(amountInput.value);
         if(parsed > 0) {
             balance += parsed;
             saveBalance();
+            closeDepositModal();
+            alert(`🎰 Cashier verified: ₱${parsed.toLocaleString()} added to your game wallet!`);
+        } else {
+            alert("Please enter a valid deposit amount.");
         }
     }
 
@@ -369,7 +565,7 @@
     function triggerMainSpin() {
         if(!isFreeSpin && comboMultiplierStep === 0) {
             if(balance < betCost) { 
-                alert("Insufficient Credits! Please deposit funds."); 
+                openDepositModal();
                 return; 
             }
             balance -= betCost;
@@ -421,110 +617,4 @@
             const data = boardGridArray[i];
             tile.className = 'card-slot';
             tile.innerText = data.text;
-            if(data.text === '♥️' || data.text === '♦️') tile.classList.add('red-suit');
-            if(data.isGold) tile.classList.add('golden-card');
-            if(data.isScatter) {
-                tile.className = 'card-slot scatter-card';
-                tile.innerHTML = '🪙<br>SCATTER';
-            }
-            if(data.isJoker) {
-                tile.className = 'card-slot joker-card';
-                tile.innerText = '🃏 JOKER';
-            }
-        }
-
-        let columns = [[], [], [], [], []];
-        for(let i=0; i<20; i++) { columns[i % 5].push({ index: i, item: boardGridArray[i] }); }
-
-        let totalWinCredits = 0;
-        let elementsToClear = new Set();
-
-        columns[0].forEach(col1 => {
-            let matchSymbol = col1.item.text;
-            if(col1.item.isScatter || col1.item.isJoker) return;
-            let col2Matches = columns[1].filter(c => c.item.text === matchSymbol || c.item.isJoker);
-            if(col2Matches.length > 0) {
-                let col3Matches = columns[2].filter(c => c.item.text === matchSymbol || c.item.isJoker);
-                if(col3Matches.length > 0) {
-                    let pathCount = 1 * col2Matches.length * col3Matches.length;
-                    elementsToClear.add(col1.index);
-                    col2Matches.forEach(c => elementsToClear.add(c.index));
-                    col3Matches.forEach(c => elementsToClear.add(c.index));
-
-                    let col4Matches = columns[3].filter(c => c.item.text === matchSymbol || c.item.isJoker);
-                    if(col4Matches.length > 0) {
-                        pathCount *= col4Matches.length;
-                        col4Matches.forEach(c => elementsToClear.add(c.index));
-                        let col5Matches = columns[4].filter(c => c.item.text === matchSymbol || c.item.isJoker);
-                        if(col5Matches.length > 0) {
-                            pathCount *= col5Matches.length;
-                            col5Matches.forEach(c => elementsToClear.add(c.index));
-                            totalWinCredits += (200 * pathCount);
-                        } else { totalWinCredits += (100 * pathCount); }
-                    } else { totalWinCredits += (40 * pathCount); }
-                }
-            }
-        });
-
-        if(scatterCounter >= 3 && !isFreeSpin) {
-            triggerFreeSpinsBonus();
-            return;
-        }
-
-        if(totalWinCredits > 0) {
-            playAudio('sound-win');
-            const targetScale = isFreeSpin ? freeMultiplierMap : normalMultiplierMap;
-            let finalPayoutCalculated = totalWinCredits * targetScale[comboMultiplierStep];
-            balance += finalPayoutCalculated;
-            saveBalance();
-            document.getElementById('win-status').innerText = `WIN: ${finalPayoutCalculated.toLocaleString()}.00`;
-
-            elementsToClear.forEach(idx => {
-                if(boardGridArray[idx].isGold) {
-                    boardGridArray[idx].isGold = false;
-                    boardGridArray[idx].isJoker = true;
-                } else if (!boardGridArray[idx].isJoker) {
-                    boardGridArray[idx] = { text: '', isGold: false, isJoker: false, isScatter: false };
-                }
-            });
-
-            if(comboMultiplierStep < 3) comboMultiplierStep++;
-            updateMultiplierDisplay();
-            setTimeout(() => { runShuffleAnimation(); }, 1200);
-        } else {
-            document.getElementById('win-status').innerText = '';
-            if(isFreeSpin && freeSpinsRemaining > 0) {
-                freeSpinsRemaining--;
-                document.getElementById('game-mode').innerText = `FREE SPIN ${freeSpinsRemaining}`;
-                if(freeSpinsRemaining === 0) {
-                    isFreeSpin = false;
-                    document.getElementById('game-mode').innerText = "MAIN GAME";
-                    comboMultiplierStep = 0;
-                }
-                setTimeout(() => { triggerMainSpin(); }, 1000);
-            } else {
-                boardGridArray = Array(20).fill(null).map(() => ({ text: 'A', isGold: false, isJoker: false, isScatter: false }));
-                comboMultiplierStep = 0;
-                updateMultiplierDisplay();
-                document.getElementById('spin-btn').disabled = false;
-            }
-        }
-    }
-
-    function triggerFreeSpinsBonus() {
-        alert("🎰 BONUS ACCESSED: 10 FREE SPINS GRANTED! 🎰");
-        isFreeSpin = true;
-        freeSpinsRemaining = 10;
-        comboMultiplierStep = 0;
-        document.getElementById('game-mode').innerText = `FREE SPIN ${freeSpinsRemaining}`;
-        updateMultiplierDisplay();
-        setTimeout(() => { triggerMainSpin(); }, 1200);
-    }
-
-    function handleLogout() {
-        localStorage.removeItem('currentUser');
-        window.location.href = "index.html";
-    }
-</script>
-</body>
-</html>
+     
